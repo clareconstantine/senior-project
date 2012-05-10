@@ -1,3 +1,6 @@
 README
 
-nom nom nom he's beautiful!
+Using limejs as submodule in lib/limejs.
+Also using google's closure library in lib/closure.
+To set up: after limejs has been cloned, run "bin/lime.py init" to download closure libraries.
+When adding files: everytime adding goog.provide or goog.require, run "bin/lime.py update" to update the dependencies.
