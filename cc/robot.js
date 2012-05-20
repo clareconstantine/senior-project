@@ -2,7 +2,7 @@ goog.provide('cc.Robot');
 
 
 cc.Robot = function() {
-  lime.Sprite.call(this);
+  goog.base(this);
 
   this.BODY_COLOR = '#444';
   this.BODY_WIDTH = 75;
@@ -30,3 +30,7 @@ cc.Robot = function() {
   this.appendChild(mouth);
 };
 goog.inherits(cc.Robot, lime.Sprite);
+
+cc.Robot.prototype.move = function(dx, dy) {
+  this.setPosition(this.getPosition().x + dx, this.getPosition().y + dy);
+};

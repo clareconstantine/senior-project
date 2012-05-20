@@ -4,7 +4,9 @@ goog.require('lime.Circle');
 goog.require('lime.Sprite');
 
 goog.require('cc.Robot');
+goog.require('cc.Toolbox');
 goog.require('cc.World');
+
 
 cc.Game = function(mode) {
   goog.base(this);
@@ -15,6 +17,11 @@ cc.Game = function(mode) {
   
   this.robot = new cc.Robot().setPosition(10,350);
   this.world.appendChild(this.robot);
+
+  this.setAnchorPoint(0,0);
+  this.toolbox = new cc.Toolbox(this.robot).setPosition(0,500);
+
+  this.appendChild(this.toolbox);
 };
 goog.inherits(cc.Game,lime.Sprite);
 
