@@ -17,7 +17,7 @@ cc.start = function() {
 
 	lime.scheduleManager.setDisplayRate(1000 / 60);
 
-	cc.director = new lime.Director(document.body, 800, 600);
+	cc.director = new lime.Director(document.body, 950, 600);
 	cc.director.makeMobileWebAppCapable();
 
 	if (SHOW_START_PAGE) {

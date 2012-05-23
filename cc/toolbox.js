@@ -2,13 +2,12 @@ goog.provide('cc.Toolbox');
 
 goog.require('cc.Tool');
 
-cc.Toolbox = function(robot) {
+cc.Toolbox = function() {
   goog.base(this);
 
-  this.robot = robot;
   this.tools = [new cc.Tool('move', 'move the robot', function(){
-              this.robot.move(50, 0);
-          }, this.robot)
+              amplify.publish("MoveRobot", 50, 0);
+          })
       ];
 
   this.setAnchorPoint(0,0);

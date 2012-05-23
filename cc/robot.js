@@ -1,6 +1,5 @@
 goog.provide('cc.Robot');
 
-
 cc.Robot = function() {
   goog.base(this);
 
@@ -28,6 +27,11 @@ cc.Robot = function() {
   var mouth = new lime.Sprite().setFill(this.PARTS_COLOR).setSize(
       this.MOUTH_WIDTH,this.MOUTH_HEIGHT).setPosition(this.MOUTH_X,this.MOUTH_Y);
   this.appendChild(mouth);
+
+  var self = this;
+  amplify.subscribe("MoveRobot", function(dx, dy) {
+    self.move(dx,dy);
+  });
 };
 goog.inherits(cc.Robot, lime.Sprite);
 

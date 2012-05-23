@@ -1,15 +1,17 @@
 goog.provide('cc.Tool');
 
-cc.Tool = function(name, desc, fxn, robot) {
+goog.require('lime.Sprite');
+
+cc.Tool = function(name, desc, fxn) {
   goog.base(this);
 
+  this.fillColor = "#ddd";
   this.setAnchorPoint(0,0);
   this.setSize(50,50);
-  this.setFill("#ddd");
+  this.setFill(this.fillColor);
   this.name = name || 'Code';
   this.desc = desc || 'Description';
   this.fxn = fxn || (function(){ alert(name)});
-  this.robot = robot;
 
   nameLabel = new lime.Label(name).setAnchorPoint(0,0).setFontSize(20).setPosition(0, 10);
   this.appendChild(nameLabel);
@@ -18,7 +20,20 @@ cc.Tool = function(name, desc, fxn, robot) {
     alert(this.name);
   }, false, this);
   goog.events.listen(this, ['click'], function(e) {
-    this.fxn();
+    amplify.publish("ToolSelected", this);
   }, false, this);
 };
 goog.inherits(cc.Tool, lime.Sprite);
+
+cc.Tool.prototype.execute = function() {
+  this.fxn();
+};
+
+cc.Tool.prototype.actionItem = function() {
+  var sprite = new lime.Sprite();
+  sprite.setAnchorPoint(0,0).setSize(100,30).setFill(this.fillColor);
+  goog.events.listen(sprite, ['click'], function(e) {
+    this.execute();
+  }, false, this);
+  return sprite;
+};

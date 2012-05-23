@@ -3,6 +3,7 @@ goog.provide('cc.Game');
 goog.require('lime.Circle');
 goog.require('lime.Sprite');
 
+goog.require('cc.ActionPlan');
 goog.require('cc.Robot');
 goog.require('cc.Toolbox');
 goog.require('cc.World');
@@ -19,9 +20,12 @@ cc.Game = function(mode) {
   this.world.appendChild(this.robot);
 
   this.setAnchorPoint(0,0);
-  this.toolbox = new cc.Toolbox(this.robot).setPosition(0,500);
-
+  this.toolbox = new cc.Toolbox().setPosition(0,500);
   this.appendChild(this.toolbox);
+
+  this.setAnchorPoint(0,0);
+  this.actionPlan = new cc.ActionPlan().setPosition(800,0);
+  this.appendChild(this.actionPlan);
 };
 goog.inherits(cc.Game,lime.Sprite);
 
