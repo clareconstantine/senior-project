@@ -14,16 +14,14 @@ goog.require('cc.Toolbox');
 goog.require('cc.World');
 
 SHOW_START_PAGE = true;
-PASSWORDS = ['hello'];
+PASSWORDS = ['one','two'];
 
 // entrypoint
 cc.start = function() {
-
 	lime.scheduleManager.setDisplayRate(1000 / 60);
 
 	cc.director = new lime.Director(document.body, 950, 600);
 	cc.director.makeMobileWebAppCapable();
-
 
 	if (SHOW_START_PAGE) {
 		cc.showStartPage();
@@ -33,7 +31,7 @@ cc.start = function() {
 };
 
 cc.newgame = function() {
-	cc.playLevel(0);
+	cc.playLevel(1);
 };
 
 cc.playLevel = function(levelNum) {
@@ -42,7 +40,7 @@ cc.playLevel = function(levelNum) {
 
 	scene.appendChild(layer);
 
-	var level = new cc.Level(1);
+	var level = new cc.Level(levelNum);
 	layer.appendChild(level);
 	
 	cc.director.replaceScene(scene);
@@ -84,10 +82,7 @@ cc.showStartPage = function() {
 			var password = prompt('Enter a password to skip to a level:');
 			var level = PASSWORDS.indexOf(password);
 			if (level > -1) {
-				
-				cc.playLevel(level);
-
-
+				cc.playLevel(level+1);
 			} else {
 				alert("Sorry, that's not a valid password. Start a new game!")
 			}

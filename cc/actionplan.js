@@ -14,8 +14,8 @@ cc.ActionPlan = function() {
   this.setSize(cc.ActionPlan.WIDTH, cc.ActionPlan.HEIGHT);
   this.setFill('#000');
 
-  this.runButton = new lime.Label("RUN").setAnchorPoint(0,0).setSize(100,50);
-  this.runButton.setFill("#678").setPosition(25,475);
+  this.runButton = new lime.GlossyButton("RUN").setSize(100,50);
+  this.runButton.setAnchorPoint(0,0).setColor("#678").setPosition(75,550);
   goog.events.listen(this.runButton, ['click'], function(e) { self.run(); });
   this.appendChild(this.runButton);
 
@@ -37,7 +37,6 @@ cc.ActionPlan.prototype.run = function() {
     this.actions[i].execute();
   }
 };
-
 
 
 cc.ActionPlan.WIDTH = 150;
