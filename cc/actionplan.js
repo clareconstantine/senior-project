@@ -33,7 +33,7 @@ cc.ActionPlan.prototype.addAction = function(tool) {
 };
 
 cc.ActionPlan.prototype.run = function() {
-  for (var i in this.actions) {
+  for (var i=0; i<this.actions.length; i++) {
     this.actions[i].execute();
   }
 };
