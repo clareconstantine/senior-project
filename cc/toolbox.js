@@ -1,6 +1,8 @@
 goog.provide('cc.Toolbox');
 
 goog.require('cc.Tool');
+goog.require('cc.World');
+
 
 cc.Toolbox = function() {
   goog.base(this);
@@ -11,10 +13,10 @@ cc.Toolbox = function() {
       ];
 
   this.setAnchorPoint(0,0);
-  this.setSize(800, 100);
+  this.setSize(cc.Toolbox.WIDTH, cc.Toolbox.HEIGHT);
   this.setFill('#000');
 
-  for (var i in this.tools) {
+  for (var i=0; i<this.tools.length; i++) {
     var tool = this.tools[i];
     tool.setPosition(50*i + 25, 25);
     this.appendChild(this.tools[i]);
@@ -25,3 +27,6 @@ goog.inherits(cc.Toolbox, lime.Sprite);
 cc.Toolbox.prototype.getTools = function() {
   return this.tools;
 };
+
+cc.Toolbox.WIDTH = cc.World.WIDTH;
+cc.Toolbox.HEIGHT = 100;

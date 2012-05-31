@@ -1,19 +1,22 @@
-goog.provide('cc.Game');
+goog.provide('cc.Level');
 
 goog.require('lime.Circle');
 goog.require('lime.Sprite');
 
+goog.require('cc');
 goog.require('cc.ActionPlan');
 goog.require('cc.Robot');
 goog.require('cc.Toolbox');
 goog.require('cc.World');
 
 
-cc.Game = function(mode) {
+cc.Level = function(levelNum) {
   goog.base(this);
 
+  //// Do set up for specific levelNum
+
   this.setAnchorPoint(0,0);
-  this.world = new cc.World(0).setSize(cc.Game.WIDTH,cc.Game.HEIGHT);
+  this.world = new cc.World(0);
   this.appendChild(this.world);
   
   this.robot = new cc.Robot().setPosition(10,350);
@@ -27,7 +30,7 @@ cc.Game = function(mode) {
   this.actionPlan = new cc.ActionPlan().setPosition(800,0);
   this.appendChild(this.actionPlan);
 };
-goog.inherits(cc.Game,lime.Sprite);
+goog.inherits(cc.Level,lime.Sprite);
 
-cc.Game.WIDTH = 800;
-cc.Game.HEIGHT = 500;
+cc.Level.WIDTH = cc.World.WIDTH + cc.ActionPlan.WIDTH;
+cc.Level.HEIGHT = cc.World.HEIGHT + cc.Toolbox.HEIGHT;

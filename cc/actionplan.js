@@ -1,13 +1,17 @@
 goog.provide('cc.ActionPlan');
 
+goog.require('cc.World');
+goog.require('cc.Toolbox');
+
 cc.ActionPlan = function() {
   goog.base(this);
+
   var self = this;
 
   this.actions = [];
 
   this.setAnchorPoint(0,0);
-  this.setSize(150, 600);
+  this.setSize(cc.ActionPlan.WIDTH, cc.ActionPlan.HEIGHT);
   this.setFill('#000');
 
   this.runButton = new lime.Label("RUN").setAnchorPoint(0,0).setSize(100,50);
@@ -33,3 +37,8 @@ cc.ActionPlan.prototype.run = function() {
     this.actions[i].execute();
   }
 };
+
+
+
+cc.ActionPlan.WIDTH = 150;
+cc.ActionPlan.HEIGHT = cc.World.HEIGHT + cc.Toolbox.HEIGHT;
