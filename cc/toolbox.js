@@ -15,6 +15,8 @@ cc.Toolbox = function() {
   this.setAnchorPoint(0,0);
   this.setSize(cc.Toolbox.WIDTH, cc.Toolbox.HEIGHT);
   this.setFill('#000');
+  var el = this.getDeepestDomElement();
+  el.style.overflowX = "scroll";
 
   for (var i=0; i<this.tools.length; i++) {
     var tool = this.tools[i];

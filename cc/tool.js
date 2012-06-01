@@ -34,8 +34,10 @@ cc.Tool.prototype.actionItem = function() {
   sprite.setAnchorPoint(0,0).setSize(100,30).setFill(this.fillColor);
   nameLabel = new lime.Label(this.name).setAnchorPoint(0,0).setFontSize(20).setPosition(25, 5);
   sprite.appendChild(nameLabel);
-  goog.events.listen(sprite, ['click'], function(e) {
-    this.execute();
-  }, false, this);
+  // TODO: listen for hover to become draggable, removable, etc
+  // TODO: remove below
+  // goog.events.listen(sprite, ['click'], function(e) {
+  //   this.execute();
+  // }, false, this);
   return sprite;
 };

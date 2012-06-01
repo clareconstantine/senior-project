@@ -14,6 +14,13 @@ cc.ActionPlan = function() {
   this.setSize(cc.ActionPlan.WIDTH, cc.ActionPlan.HEIGHT);
   this.setFill('#000');
 
+  this.scroll = new lime.Sprite();
+  this.scroll.setSize(cc.ActionPlan.WIDTH, cc.World.HEIGHT).setAnchorPoint(0,0);
+  this.setAnchorPoint(0,0);
+  var el = this.scroll.getDeepestDomElement();
+  el.style.overflowY = "scroll";
+  this.appendChild(this.scroll);
+
   this.runButton = new lime.GlossyButton("RUN").setSize(100,50);
   this.runButton.setAnchorPoint(0,0).setColor("#678").setPosition(75,550);
   goog.events.listen(this.runButton, ['click'], function(e) { self.run(); });
@@ -29,7 +36,7 @@ cc.ActionPlan.prototype.addAction = function(tool) {
   this.actions.push(tool);
   var sprite = tool.actionItem();
   sprite.setPosition(25, 20+50*(this.actions.length-1));
-  this.appendChild(sprite);
+  this.scroll.appendChild(sprite);
 };
 
 cc.ActionPlan.prototype.run = function() {
