@@ -14,6 +14,7 @@ goog.require('cc.Toolbox');
 goog.require('cc.World');
 
 SHOW_START_PAGE = true;
+//SHOW_START_PAGE = false;
 PASSWORDS = ['one','two'];
 
 // entrypoint
@@ -28,6 +29,10 @@ cc.start = function() {
 	} else {
 		cc.newgame();
 	}
+
+	amplify.subscribe("LevelPassed", function(level) {
+		cc.playLevel(level.levelNum+1);
+	});
 };
 
 cc.newgame = function() {
@@ -35,15 +40,10 @@ cc.newgame = function() {
 };
 
 cc.playLevel = function(levelNum) {
-	var scene = new lime.Scene(),
-	layer = new lime.Layer();
-
-	scene.appendChild(layer);
 
 	var level = new cc.Level(levelNum);
-	layer.appendChild(level);
-	
-	cc.director.replaceScene(scene);
+
+	cc.showLevelTitlePage(level);
 };
 
 Array.prototype.contains = function(obj) {
@@ -94,6 +94,44 @@ cc.showStartPage = function() {
 	cc.director.replaceScene(introScene);
 }
 
+cc.showLevelTitlePage = function(level) {
+	var scene = new lime.Scene();
+	var layer = new lime.Layer();
+	var background = new lime.Sprite().setSize(cc.Level.WIDTH,cc.Level.HEIGHT);
+	background.setAnchorPoint(0,0).setFill('#000');
+	layer.appendChild(background);
+
+	var title = new lime.Label('Level ' + level.levelNum).setFontColor('#fff').setAnchorPoint(0,0).setPosition(
+			50, 50).setFontSize(30);
+	layer.appendChild(title);
+
+	var objective = "OBJECTIVE: " + level.directions;
+	var objectiveLabel = new lime.Label(objective).setFontColor('#fff').setAnchorPoint(0,0).setPosition(
+			50, 125).setFontSize(20);
+	layer.appendChild(objectiveLabel);
+
+	//TODO: Explain new tools
+
+	if (level.levelNum > 1) {
+		var password = "LEVEL PASSWORD: " + level.password;
+		var pLabel = new lime.Label(password).setFontColor('#fff').setAnchorPoint(0,0).setPosition(
+			50, 225).setFontSize(20);
+	layer.appendChild(pLabel);
+	}
+
+	var goButton = new lime.GlossyButton('OK').setSize(50, 30).setPosition(475, 300).setColor('#5A5');
+	goog.events.listen(goButton, 'click', function() {
+			var levelScene = new lime.Scene();
+			var levelLayer = new lime.Layer();
+			levelLayer.appendChild(level);
+			levelScene.appendChild(levelLayer);
+			cc.director.replaceScene(levelScene);
+	});
+	layer.appendChild(goButton);
+
+	scene.appendChild(layer);
+	cc.director.replaceScene(scene);
+};
 
 //this is required for outside access after code is compiled in ADVANCED_COMPILATIONS mode
 goog.exportSymbol('cc.start', cc.start);

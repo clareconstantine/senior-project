@@ -43,6 +43,7 @@ cc.ActionPlan.prototype.run = function() {
   for (var i=0; i<this.actions.length; i++) {
     this.actions[i].execute();
   }
+  amplify.publish("LevelAttempted", this);
 };
 
 

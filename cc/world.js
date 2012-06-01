@@ -26,7 +26,6 @@ cc.World = function(levelNum) {
     ground.appendChild(brick);
   }
 
-
   this.setAnchorPoint(0,0);
   this.setUpWorld(levelNum);
 };
@@ -38,9 +37,9 @@ cc.World.WIDTH = 800;
 cc.World.prototype.setUpWorld = function(level) {
   switch (level) {
     case 1:
-      var door = new lime.Polygon().setFill('#663422');//.setPosition(cc.World.WIDTH,cc.World.HEIGHT);
-      door.addPoints(650,500, 700,350, 800,300, 800,500);
-      this.appendChild(door);
+      this.door = new lime.Polygon().setFill('#663422');
+      this.door.addPoints(650,500, 700,350, 800,300, 800,500);
+      this.appendChild(this.door);
       break;
     default:
       break;
