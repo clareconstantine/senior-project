@@ -63,13 +63,19 @@ cc.showStartPage = function() {
 	background.setAnchorPoint(0,0).setFill('#000');
 	layer.appendChild(background);
 
-	var title = new lime.Label('Code Caverns!').setFontColor('#fff').setAnchorPoint(0,0).setPosition(
-			350, 50).setFontSize(40);
+	var title = new lime.Label('CODE CAVERNS').setFontColor('#fff').setAnchorPoint(0,0).setPosition(
+			50, 50).setFontSize(40);
 	layer.appendChild(title);
-	var introText = "Welcome to Code Caverns! Your job is to program your robot to advance through each cavern. Good luck!";
+	var introText = "MISSION: Program your robot to advance through each cavern.";
 	var intro = new lime.Label(introText).setFontColor('#fff').setAnchorPoint(0,0).setPosition(
-			10, 125).setFontSize(20);
+			50, 125).setFontSize(20);
 	layer.appendChild(intro);
+
+	var directions = "INSTRUCTIONS: Select items from the toolbox to add to your action plan."
+	directions += " When you're ready, click the RUN button to try your solution.";
+	var dLabel = new lime.Label(directions).setFontColor('#fff').setAnchorPoint(0,0).setPosition(
+			50, 175).setFontSize(20);
+	layer.appendChild(dLabel);
 
 	var newGameButton = new lime.GlossyButton('NEW GAME').setSize(150, 60).setPosition(475, 300).setColor('#5A5');
 	goog.events.listen(newGameButton, 'click', function() {
