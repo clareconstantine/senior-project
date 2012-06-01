@@ -8,7 +8,7 @@ cc.Toolbox = function() {
   goog.base(this);
 
   this.tools = [new cc.Tool('move', 'move the robot', function(){
-              amplify.publish("MoveRobot", 50, 0);
+              amplify.publish("MoveRobot", 100, 0);
           })
       ];
 
