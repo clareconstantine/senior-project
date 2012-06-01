@@ -1,6 +1,14 @@
+CODE CAVERNS!
+
+A javascript webgame designed to teach kids basic programming concepts. Players create visual "programs" to help the robot complete tasks in each level.
+
+Authors: Maria-Ines Carrera and Clare Constantine
+
+
 README
 
-Using limejs as submodule in lib/limejs.
-Also using google's closure library in lib/closure.
-To set up: after limejs has been cloned, run "bin/lime.py init" to download closure libraries.
-When adding files: everytime adding goog.provide or goog.require, run "bin/lime.py update" to update the dependencies.
+This project uses Google's Closure library and limejs as the javascript graphics framework. Both these libraries are located as submodules under lib/.
+
+Cloning: After cloning senior-project, run "bin/lime.py init" to download closure libraries.
+
+Editing: changes to goog.provide, goog.require, and goog.inherits require updating the limejs dependencies. Run "bin/lime.py update" to update.
