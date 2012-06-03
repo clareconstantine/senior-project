@@ -1,5 +1,7 @@
 goog.provide('cc.Robot');
 
+goog.require('lime.animation.MoveBy');
+
 cc.Robot = function() {
   goog.base(this);
 
@@ -29,12 +31,13 @@ cc.Robot = function() {
   this.appendChild(mouth);
 
   var self = this;
-  amplify.subscribe("MoveRobot", function(dx, dy) {
-    self.move(dx,dy);
+  amplify.subscribe("RunSequence", function(sequence) {
+    self.runAction(sequence);
   });
 };
 goog.inherits(cc.Robot, lime.Sprite);
 
 cc.Robot.prototype.move = function(dx, dy) {
-  this.setPosition(this.getPosition().x + dx, this.getPosition().y + dy);
+  var animation = new lime.animation.MoveBy(dx, dy);
+  return animation;
 };

@@ -2,7 +2,7 @@ goog.provide('cc.Tool');
 
 goog.require('lime.Sprite');
 
-cc.Tool = function(name, desc, fxn) {
+cc.Tool = function(name, desc, animation) {
   goog.base(this);
 
   this.fillColor = "#ddd";
@@ -11,7 +11,7 @@ cc.Tool = function(name, desc, fxn) {
   this.setFill(this.fillColor);
   this.name = name || 'Code';
   this.desc = desc || 'Description';
-  this.fxn = fxn || (function(){ alert(name)});
+  this.animation = animation;
 
   nameLabel = new lime.Label(name).setAnchorPoint(0,0).setFontSize(20).setPosition(0, 10);
   this.appendChild(nameLabel);
@@ -25,8 +25,8 @@ cc.Tool = function(name, desc, fxn) {
 };
 goog.inherits(cc.Tool, lime.Sprite);
 
-cc.Tool.prototype.execute = function() {
-  this.fxn();
+cc.Tool.prototype.getAnimation = function() {
+  return this.animation;
 };
 
 cc.Tool.prototype.actionItem = function() {
@@ -35,9 +35,33 @@ cc.Tool.prototype.actionItem = function() {
   nameLabel = new lime.Label(this.name).setAnchorPoint(0,0).setFontSize(20).setPosition(25, 5);
   sprite.appendChild(nameLabel);
   // TODO: listen for hover to become draggable, removable, etc
-  // TODO: remove below
-  // goog.events.listen(sprite, ['click'], function(e) {
-  //   this.execute();
-  // }, false, this);
   return sprite;
 };
+
+cc.Tool.prototype.addSubTool = function(tool) {
+  if (this.tools) {
+    this.tools.push(tool);
+  }
+};
+
+cc.ForTool = function() {
+  goog.base(this, "times", "specify a number of times to do some actions");
+  this.count = 0;
+  this.tools = new Array();
+  this.fxn = function() {
+    for (var i=0; i<this.count; i++) {
+      for (var j=0; j<this.tools.length; j++) {
+        this.tools[j].execute();
+      }
+    }
+  };
+};
+goog.inherits(cc.ForTool, cc.Tool)
+
+cc.ForTool.prototype.setCount = function(count) {
+  this.count = count;
+};
+
+cc.ForTool.prototype.actionItem = function() {
+  var sprite = goog.base(this, "actionItem");
+}

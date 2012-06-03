@@ -2,6 +2,7 @@ goog.provide('cc.ActionPlan');
 
 goog.require('cc.World');
 goog.require('cc.Toolbox');
+goog.require('lime.animation.Sequence');
 
 cc.ActionPlan = function() {
   goog.base(this);
@@ -26,7 +27,7 @@ cc.ActionPlan = function() {
   goog.events.listen(this.runButton, ['click'], function(e) { self.run(); });
   this.appendChild(this.runButton);
 
-  amplify.subscribe("ToolSelected", function( tool ) {
+  this.sub = amplify.subscribe("ToolSelected", function( tool ) {
       self.addAction(tool);
   });
 };
@@ -40,10 +41,15 @@ cc.ActionPlan.prototype.addAction = function(tool) {
 };
 
 cc.ActionPlan.prototype.run = function() {
+  var animations = [];
   for (var i=0; i<this.actions.length; i++) {
-    this.actions[i].execute();
+    animations.push(this.actions[i].getAnimation());
   }
-  amplify.publish("LevelAttempted", this);
+  var sequence = new lime.animation.Sequence(animations);
+  amplify.publish("RunSequence", sequence);
+  goog.events.listen(sequence,lime.animation.Event.STOP,function(){
+    amplify.publish("LevelAttempted", this);
+  })
 };
 
 
