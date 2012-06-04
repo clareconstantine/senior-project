@@ -30,11 +30,17 @@ cc.Level = function(levelNum, robot) {
   //TODO: disable rest of level while message is shown
 
   var self = this;
-  var helpButton = new lime.GlossyButton('Help').setSize(60, 30).setAnchorPoint(0,0).setPosition(40, 20).setColor('#77d');
+  var helpButton = new lime.GlossyButton('Hint').setSize(60, 30).setAnchorPoint(0,0).setPosition(40, 20).setColor('#77d');
   goog.events.listen(helpButton, 'click', function() {
       self.message.show();
   });
   this.appendChild(helpButton);
+
+  var solutionButton = new lime.GlossyButton('See Mission').setSize(120, 30).setAnchorPoint(0,0).setPosition(140, 20).setColor('#77d');
+  goog.events.listen(solutionButton, 'click', function() {
+      self.animateSolution(self.levelNum);
+  });
+  this.appendChild(solutionButton);
 };
 goog.inherits(cc.Level,lime.Sprite);
 
@@ -95,4 +101,36 @@ cc.Level.prototype.levelPassed = function() {
 
 cc.Level.prototype.reset = function() {
   this.robot.setPosition(10,350);
+};
+
+cc.Level.prototype.animateSolution = function(levelNum) {
+  var animations = [];
+  var tools = this.toolbox.getTools();
+  switch (levelNum) {
+    case 1:
+      var moveTool = tools[0];
+      // screen is 8 positions wide, must move robot 7 times to complete level
+      for (var i=0; i<7; i++) {
+        animations.push(moveTool.getAnimation());
+      }
+      break;
+    case 2:
+      var moveTool = tools[0];
+      var jumpTool = tools[1];
+      for (var i=0; i<4; i++) {
+        animations.push(moveTool.getAnimation());
+      }
+      animations.push(jumpTool.getAnimation());
+      for (var i=0; i<4; i++) {
+        animations.push(moveTool.getAnimation());
+      }
+      break;
+    default:
+  }
+  var sequence = new lime.animation.Sequence(animations);
+  amplify.publish("RunSequence", sequence);
+  var self = this;
+  goog.events.listen(sequence,lime.animation.Event.STOP,function(){
+    self.reset();
+  })
 }

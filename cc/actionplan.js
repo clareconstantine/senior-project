@@ -41,15 +41,19 @@ cc.ActionPlan.prototype.addAction = function(tool) {
 };
 
 cc.ActionPlan.prototype.run = function() {
-  var animations = [];
+   var animations = [];
   for (var i=0; i<this.actions.length; i++) {
     animations.push(this.actions[i].getAnimation());
   }
-  var sequence = new lime.animation.Sequence(animations);
-  amplify.publish("RunSequence", sequence);
-  goog.events.listen(sequence,lime.animation.Event.STOP,function(){
-    amplify.publish("LevelAttempted", this);
-  })
+  if (animations.length > 0) {
+    var sequence = new lime.animation.Sequence(animations);
+    amplify.publish("RunSequence", sequence);
+    goog.events.listen(sequence,lime.animation.Event.STOP,function(){
+      amplify.publish("LevelAttempted", this);
+    })
+  } else {
+    // TODO: display message that they need to add actions to run
+  }
 };
 
 
