@@ -6,7 +6,7 @@ cc.Message = function(text) {
   //this.setAnchorPoint(0,0)
   this.setSize(400,200).setFill('#222').setStroke(5,'#000');
   this.setAnchorPoint(0,0);
-  var text = new lime.Label(text).setFontSize(20).setFontColor('#fff').setAnchorPoint(0,0).setPosition(10,10);
+  var text = new lime.Label(text).setFontSize(20).setFontColor('#fff').setAnchorPoint(0,0).setPosition(10,10).setAlign('left').setSize(350,200);
   this.appendChild(text);
 
   var self = this;

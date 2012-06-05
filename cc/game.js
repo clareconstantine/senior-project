@@ -56,9 +56,9 @@ cc.Game.prototype.showStartPage = function() {
   layer.appendChild(intro);
 
   var directions = "INSTRUCTIONS: Select items from the toolbox to add to your action plan."
-  directions += "\nWhen you're ready, click the RUN button to try your solution.";
+  directions += "When you're ready, click the RUN button to try your solution.";
   var dLabel = new lime.Label(directions).setFontColor('#fff').setAnchorPoint(0,0).setPosition(
-      50, 175).setFontSize(20);
+      50, 175).setFontSize(20).setAlign('left').setSize(800,300);
   layer.appendChild(dLabel);
 
   var newGameButton = new lime.GlossyButton('NEW GAME').setSize(150, 60).setPosition(475, 300).setColor('#5A5');
