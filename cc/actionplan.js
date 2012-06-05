@@ -52,7 +52,7 @@ cc.ActionPlan.prototype.run = function() {
       amplify.publish("LevelAttempted", this);
     })
   } else {
-    // TODO: display message that they need to add actions to run
+    alert("Click on actions to give the robot directions, then click RUN to see him do them!");
   }
 };
 
