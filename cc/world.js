@@ -45,7 +45,7 @@ cc.World.prototype.setUpWorld = function(level) {
       this.setChildIndex(this.coin, 0);
 
       this.coin.wasCollected = false;
-      //goog.events
+      //goog.events.listen
 
       break;
     default:

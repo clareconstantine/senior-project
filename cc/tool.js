@@ -32,8 +32,9 @@ cc.Tool.prototype.getAnimation = function() {
 cc.Tool.prototype.actionItem = function() {
   var sprite = new lime.Sprite();
   sprite.setAnchorPoint(0,0).setSize(100,30).setFill(this.fillColor);
-  nameLabel = new lime.Label(this.name).setAnchorPoint(0,0).setFontSize(20).setPosition(25, 5);
+  var nameLabel = new lime.Label(this.name).setAnchorPoint(0,0).setFontSize(20).setPosition(25, 5);
   sprite.appendChild(nameLabel);
+
   // TODO: listen for hover to become draggable, removable, etc
   return sprite;
 };

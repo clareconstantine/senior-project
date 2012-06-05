@@ -3,7 +3,6 @@ goog.provide('cc.Level');
 goog.require('lime.Circle');
 goog.require('lime.Sprite');
 
-goog.require('cc');
 goog.require('cc.ActionPlan');
 goog.require('cc.Message');
 goog.require('cc.Robot');
@@ -72,9 +71,9 @@ cc.Level.prototype.levelAttempted = function(levelNum) {
       } else this.levelFailed();
       break;
     case 2:
-      // if (this.world.coin.wasCollected()) {
-      //   this.levelPassed();
-      // } else this.levelFailed();
+      if (this.world.coin.wasCollected) {
+         this.levelPassed();
+      } else this.levelFailed();
       break;
     default:
   }
