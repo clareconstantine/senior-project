@@ -18,9 +18,13 @@ cc.Game = function() {
     self.playLevel(level.levelNum+1);
   });
 };
+goog.inherits(cc.Game, lime.Sprite);
 
 cc.Game.prototype.playLevel = function(levelNum) {
-  var level = new cc.Level(levelNum, this.robot);
+  if (!this.actionPlan) {
+    this.actionPlan = new cc.ActionPlan().setPosition(800,0);
+  }
+  var level = new cc.Level(levelNum, this.robot, this.actionPlan);
   this.showLevelTitlePage(level);
 };
 
@@ -110,15 +114,15 @@ cc.Game.prototype.showLevelTitlePage = function(level) {
   }
 
   var goButton = new lime.GlossyButton('OK').setSize(50, 30).setPosition(475, 300).setColor('#5A5');
+  var self = this;
   goog.events.listen(goButton, 'click', function() {
       var levelScene = new lime.Scene();
       var levelLayer = new lime.Layer();
       levelLayer.appendChild(level);
       
       this.setAnchorPoint(0,0);
-      this.actionPlan = new cc.ActionPlan().setPosition(800,0);
 
-      levelLayer.appendChild(this.actionPlan);
+      levelLayer.appendChild(self.actionPlan);
       levelScene.appendChild(levelLayer);
       cc.director.replaceScene(levelScene);
   });

@@ -11,13 +11,14 @@ goog.require('cc.World');
 
 DIRECTIONS = ["Move the robot through the cavern entrance on the right.",
               "Collect the coin on your way through the tunnel."];
-PASSWORDS = ["one", "two"];
+PASSWORDS = ["one", "two", "three", "four"];
 
-cc.Level = function(levelNum, robot) {
+cc.Level = function(levelNum, robot, actionPlan) {
   goog.base(this);
 
   this.levelNum = levelNum;
   this.robot = robot;
+  this.actionPlan = actionPlan;
   this.setUp();
 
   this.directions = DIRECTIONS[levelNum-1] || "Directions";
@@ -46,7 +47,6 @@ goog.inherits(cc.Level,lime.Sprite);
 cc.Level.WIDTH = cc.World.WIDTH + cc.ActionPlan.WIDTH;
 cc.Level.HEIGHT = cc.World.HEIGHT + cc.Toolbox.HEIGHT;
 
-
 //// Do set up for specific levelNum
 cc.Level.prototype.setUp = function() {
   this.attempts = 0;
@@ -60,7 +60,7 @@ cc.Level.prototype.setUp = function() {
   this.world.setChildIndex(this.robot,1);
 
   this.setAnchorPoint(0,0);
-  this.toolbox = new cc.Toolbox(this.levelNum).setPosition(0,500);
+  this.toolbox = new cc.Toolbox(this.levelNum, this.actionPlan, this).setPosition(0,500);
   this.appendChild(this.toolbox);
 
   var self = this;

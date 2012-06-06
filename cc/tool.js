@@ -12,6 +12,7 @@ cc.Tool = function(name, desc, animation) {
   this.name = name || 'Code';
   this.desc = desc || 'Description';
   this.animation = animation;
+  this.dragObject = this.dragObject().setHidden(true);
 
   nameLabel = new lime.Label(name).setAnchorPoint(0,0).setFontSize(20).setPosition(0, 10);
   this.appendChild(nameLabel);
@@ -22,8 +23,15 @@ cc.Tool = function(name, desc, animation) {
   goog.events.listen(this, ['click'], function(e) {
     amplify.publish("ToolSelected", this);
   }, false, this);
+
 };
 goog.inherits(cc.Tool, lime.Sprite);
+
+cc.Tool.prototype.dragObject = function() {
+  var sprite = new lime.Sprite().setFill("#ddd").setAnchorPoint(0,0).setSize(50,50);
+  sprite.appendChild(new lime.Label(this.name).setAnchorPoint(0,0).setPosition(0,10).setFontSize(20));
+  return sprite;
+};
 
 cc.Tool.prototype.getAnimation = function() {
   return this.animation;
@@ -65,4 +73,8 @@ cc.ForTool.prototype.setCount = function(count) {
 
 cc.ForTool.prototype.actionItem = function() {
   var sprite = goog.base(this, "actionItem");
+  var count = prompt ("Enter # of times to repeat");
+  this.setCount(count);
+  sprite.appendChild(new lime.Label(count).setPosition(10,10));
+  return sprite;
 }

@@ -4,15 +4,17 @@ goog.require('cc.Tool');
 goog.require('cc.World');
 
 
-cc.Toolbox = function(levelNum) {
+cc.Toolbox = function(levelNum, actionPlan, level) {
   goog.base(this);
 
   this.tools = new Array();
+  this.actionPlan = actionPlan;
+  this.level = level;
 
   switch (levelNum) {
     // Intentional fall-through. Each level includes the previous level's tools, plus any new ones.
     case 3:
-      var forTool = new cc.Tool('times', '');
+      var forTool = new cc.ForTool();
       this.tools.unshift(forTool);
 
     case 2:
@@ -36,9 +38,29 @@ cc.Toolbox = function(levelNum) {
 
   for (var i=0; i<this.tools.length; i++) {
     var tool = this.tools[i];
-    //tool.setAnchorPoint(.5,.5);
     tool.setPosition(20+70*i, 20);
     this.appendChild(tool);
+
+    var self = this;
+    goog.events.listen(tool, ['mousedown'], function(e) {
+      self.level.getParent().appendChild(tool.dragObject);
+      tool.dragObject.setPosition(self.localToNode(tool.getPosition(),self.level.getParent())).setHidden(false);
+      var drag = e.startDrag(false, null, tool.dragObject);
+      drag.addDropTarget(self.actionPlan);
+      e.event.stopPropagation();
+
+     // Drop into target and animate
+      goog.events.listen(drag, lime.events.Drag.Event.DROP, function(e){
+        self.actionPlan.addAction(tool);
+        tool.dragObject.setHidden(true);
+      });
+      
+      // Move back if not dropped on target.
+      goog.events.listen(drag, lime.events.Drag.Event.CANCEL, function(){
+        tool.dragObject.setHidden(true);
+      });
+
+    });
   }
 };
 goog.inherits(cc.Toolbox, lime.Sprite);

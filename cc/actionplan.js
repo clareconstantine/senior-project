@@ -38,8 +38,8 @@ cc.ActionPlan.prototype.addAction = function(tool) {
   var sprite = tool.actionItem();
   sprite.setPosition(25, 20+50*(this.actions.length-1));
 
-  var xButton = new lime.GlossyButton("x").setSize(10,10);
-  xButton.setAnchorPoint(1,0).setColor("#678").setPosition(100,0);
+  var xButton = new lime.Label("x").setFontSize(15);
+  xButton.setAnchorPoint(1,0).setPosition(95,0);
   var self = this;
   goog.events.listen(xButton, ['click'], function(e) { 
     self.removeAction(tool); 
