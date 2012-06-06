@@ -33,9 +33,9 @@ cc.ActionPlan = function() {
 };
 goog.inherits(cc.ActionPlan, lime.Sprite);
 
-cc.ActionPlan.prototype.addAction = function(tool) {
+cc.ActionPlan.prototype.addAction = function(tool, actionItem) {
   this.actions.push(tool);
-  var sprite = tool.actionItem();
+  var sprite = actionItem;
   sprite.setPosition(25, 20+50*(this.actions.length-1));
 
   var xButton = new lime.Label("x").setFontSize(15);

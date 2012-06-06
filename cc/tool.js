@@ -64,6 +64,13 @@ cc.ForTool = function() {
       }
     }
   };
+
+  this.showDropHighlight = function(){
+    this.runAction(new lime.animation.FadeTo(.6).setDuration(.3));
+  };
+  this.hideDropHighlight = function(){
+    this.runAction(new lime.animation.FadeTo(1).setDuration(.1));
+  };
 };
 goog.inherits(cc.ForTool, cc.Tool)
 
