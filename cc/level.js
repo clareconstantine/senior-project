@@ -26,7 +26,6 @@ cc.Level = function(levelNum, robot, actionPlan) {
   this.message = new cc.Message(this.directions);
   this.message.setPosition(200, 100).setHidden(true);
   this.appendChild(this.message);
-  //TODO: make message text wrap
   //TODO: disable rest of level while message is shown
 
   var self = this;

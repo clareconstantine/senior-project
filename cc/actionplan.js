@@ -59,7 +59,10 @@ cc.ActionPlan.prototype.removeAction = function(tool) {
 };
 
 cc.ActionPlan.prototype.run = function() {
-  if (this.actions.length < 1) return;
+  if (this.actions.length < 1) {
+    alert("Click on actions to give the robot directions, then click RUN to see him do them!");  
+    return;
+  }
   var animations = [];
   for (var i=0; i<this.actions.length; i++) {
     animations.push(this.actions[i].getAnimation());
@@ -68,7 +71,6 @@ cc.ActionPlan.prototype.run = function() {
   if (animations.length < 2) {
     published = animations[0];
   } else {
-    alert("Click on actions to give the robot directions, then click RUN to see him do them!");
     published = new lime.animation.Sequence(animations);
   }
   amplify.publish("RunSequence", published);
