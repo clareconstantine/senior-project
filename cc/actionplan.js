@@ -33,27 +33,48 @@ cc.ActionPlan = function() {
 };
 goog.inherits(cc.ActionPlan, lime.Sprite);
 
-cc.ActionPlan.prototype.addAction = function(tool) {
+cc.ActionPlan.prototype.addAction = function(tool, actionItem) {
   this.actions.push(tool);
-  var sprite = tool.actionItem();
+  var sprite = actionItem;
   sprite.setPosition(25, 20+50*(this.actions.length-1));
+
+  var xButton = new lime.Label("x").setFontSize(15);
+  xButton.setAnchorPoint(1,0).setPosition(95,0);
+  var self = this;
+  goog.events.listen(xButton, ['click'], function(e) { 
+    self.removeAction(tool); 
+  });
+  sprite.appendChild(xButton);
+
   this.scroll.appendChild(sprite);
 };
 
+cc.ActionPlan.prototype.removeAction = function(tool) {
+  var index = this.actions.indexOf(tool);
+  this.actions.splice(index,1);
+  this.scroll.removeChildAt(index);
+  for (var i=index; i<this.actions.length; i++) {
+    this.scroll.getChildAt(i).setPosition(25, 20+50*i);
+  }
+};
+
 cc.ActionPlan.prototype.run = function() {
-   var animations = [];
+  if (this.actions.length < 1) return;
+  var animations = [];
   for (var i=0; i<this.actions.length; i++) {
     animations.push(this.actions[i].getAnimation());
   }
-  if (animations.length > 0) {
-    var sequence = new lime.animation.Sequence(animations);
-    amplify.publish("RunSequence", sequence);
-    goog.events.listen(sequence,lime.animation.Event.STOP,function(){
-      amplify.publish("LevelAttempted", this);
-    })
+  var published = null;
+  if (animations.length < 2) {
+    published = animations[0];
   } else {
     alert("Click on actions to give the robot directions, then click RUN to see him do them!");
+    published = new lime.animation.Sequence(animations);
   }
+  amplify.publish("RunSequence", published);
+  goog.events.listenOnce(published,lime.animation.Event.STOP,function(e){
+    amplify.publish("LevelAttempted", this);
+  })
 };
 
 

@@ -18,9 +18,13 @@ cc.Game = function() {
     self.playLevel(level.levelNum+1);
   });
 };
+goog.inherits(cc.Game, lime.Sprite);
 
 cc.Game.prototype.playLevel = function(levelNum) {
-  var level = new cc.Level(levelNum, this.robot);
+  if (!this.actionPlan) {
+    this.actionPlan = new cc.ActionPlan().setPosition(800,0);
+  }
+  var level = new cc.Level(levelNum, this.robot, this.actionPlan);
   this.showLevelTitlePage(level);
 };
 
@@ -56,9 +60,9 @@ cc.Game.prototype.showStartPage = function() {
   layer.appendChild(intro);
 
   var directions = "INSTRUCTIONS: Select items from the toolbox to add to your action plan."
-  directions += "\nWhen you're ready, click the RUN button to try your solution.";
+  directions += "When you're ready, click the RUN button to try your solution.";
   var dLabel = new lime.Label(directions).setFontColor('#fff').setAnchorPoint(0,0).setPosition(
-      50, 175).setFontSize(20);
+      50, 175).setFontSize(20).setAlign('left').setSize(800,300);
   layer.appendChild(dLabel);
 
   var newGameButton = new lime.GlossyButton('NEW GAME').setSize(150, 60).setPosition(475, 300).setColor('#5A5');
@@ -110,15 +114,15 @@ cc.Game.prototype.showLevelTitlePage = function(level) {
   }
 
   var goButton = new lime.GlossyButton('OK').setSize(50, 30).setPosition(475, 300).setColor('#5A5');
+  var self = this;
   goog.events.listen(goButton, 'click', function() {
       var levelScene = new lime.Scene();
       var levelLayer = new lime.Layer();
       levelLayer.appendChild(level);
       
       this.setAnchorPoint(0,0);
-      this.actionPlan = new cc.ActionPlan().setPosition(800,0);
 
-      levelLayer.appendChild(this.actionPlan);
+      levelLayer.appendChild(self.actionPlan);
       levelScene.appendChild(levelLayer);
       cc.director.replaceScene(levelScene);
   });
