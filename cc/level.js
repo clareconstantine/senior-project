@@ -23,7 +23,7 @@ cc.Level = function(levelNum, robot, actionPlan) {
 
   this.directions = DIRECTIONS[levelNum-1] || "Directions";
   this.password = PASSWORDS[levelNum-1] || '';
-  this.message = new cc.Message(this.directions);
+  this.message = new cc.Message();
   this.message.setPosition(200, 100).setHidden(true);
   this.appendChild(this.message);
   //TODO: disable rest of level while message is shown
@@ -31,7 +31,7 @@ cc.Level = function(levelNum, robot, actionPlan) {
   var self = this;
   var helpButton = new lime.GlossyButton('Hint').setSize(60, 30).setAnchorPoint(0,0).setPosition(40, 20).setColor('#77d');
   goog.events.listen(helpButton, 'click', function() {
-      self.message.show();
+      self.message.show(self.directions);
   });
   this.appendChild(helpButton);
 
@@ -40,6 +40,13 @@ cc.Level = function(levelNum, robot, actionPlan) {
       self.animateSolution(self.levelNum);
   });
   this.appendChild(solutionButton);
+  
+  this.dsub = amplify.subscribe("ToolDescClicked", function(){ 
+    self.message.show(this.desc);
+  });
+  amplify.unsubscribe("ToolDescClicked", this.dsub);
+
+
 };
 goog.inherits(cc.Level,lime.Sprite);
 

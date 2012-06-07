@@ -43,22 +43,15 @@ cc.Toolbox = function(levelNum, actionPlan, level) {
     tool.setPosition(20+70*i, 20);
     this.appendChild(tool);
 
-    var self = this;
     // adds ? button under each tool to display description of tool
-    var descMessage = new cc.Message(tool.desc);
-    // TODO: have it display over level not toolbox if possible
-    descMessage.setPosition(200, 100).setHidden(true);
-    this.appendChild(descMessage);
     var descButton = new lime.Label(" ? ").setFontSize(18).setFill('#fff').setAnchorPoint(.5, 0);
     descButton.setAnchorPoint(0,0).setPosition(36+70*i,79);
-    console.log(descMessage);
-    goog.events.listen(descButton, ['click'], (function(message) { return (function(e) { message.show(); }) })(descMessage));
-      // doesn't hide when you click ok...
-      // also can't display a second one.
-      // after opening one, clicking the other's button causes js error about adding null undefined actions
+    this.appendChild(descButton);
+    goog.events.listen(descButton, 'click', function() {
+      amplify.publish("ToolDescClicked", tool);
+    });
 
-    this.appendChild(descButton); 
-
+    var self = this;
     goog.events.listen(tool, 'mousedown', function(e) {
       var dragObject = e.currentTarget.dragObject;
       var draggedTool = e.currentTarget;

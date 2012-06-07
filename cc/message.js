@@ -1,13 +1,10 @@
 goog.provide('cc.Message');
 
-cc.Message = function(text) {
+cc.Message = function() {
   goog.base(this);
 
-  //this.setAnchorPoint(0,0)
   this.setSize(400,200).setFill('#222').setStroke(5,'#000');
   this.setAnchorPoint(0,0);
-  var text = new lime.Label(text).setFontSize(20).setFontColor('#fff').setAnchorPoint(0,0).setPosition(10,10).setAlign('left').setSize(350,200);
-  this.appendChild(text);
 
   var self = this;
   this.setAnchorPoint(0,0);
@@ -23,6 +20,8 @@ cc.Message.prototype.hide = function() {
   this.setHidden(true);
 };
 
-cc.Message.prototype.show = function() {
+cc.Message.prototype.show = function(text) {
+  var text = new lime.Label(text).setFontSize(20).setFontColor('#fff').setAnchorPoint(0,0).setPosition(10,10).setAlign('left').setSize(350,200);
+  this.appendChild(text);
   this.setHidden(false);
 };
