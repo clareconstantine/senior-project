@@ -41,6 +41,7 @@ cc.Level = function(levelNum, robot, actionPlan) {
   });
   this.appendChild(solutionButton);
   
+  // TODO: make this part work...
   this.dsub = amplify.subscribe("ToolDescClicked", function(){ 
     self.message.show(this.desc);
   });

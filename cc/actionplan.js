@@ -27,6 +27,9 @@ cc.ActionPlan = function() {
   goog.events.listen(this.runButton, ['click'], function(e) { self.run(); });
   this.appendChild(this.runButton);
 
+  this.planLabel = new lime.Label("Commands:").setFontSize(25).setFontColor('#fff').setPosition(5,5).setAnchorPoint(0,0);
+  this.appendChild(this.planLabel);
+
   this.sub = amplify.subscribe("ToolSelected", function( tool ) {
       self.addAction(tool);
   });
@@ -36,7 +39,7 @@ goog.inherits(cc.ActionPlan, lime.Sprite);
 cc.ActionPlan.prototype.addAction = function(tool, actionItem) {
   this.actions.push(tool);
   var sprite = actionItem;
-  sprite.setPosition(25, 20+50*(this.actions.length-1));
+  sprite.setPosition(25, 35+50*(this.actions.length-1));
 
   var xButton = new lime.Label("x").setFontSize(15);
   xButton.setAnchorPoint(1,0).setPosition(95,0);
