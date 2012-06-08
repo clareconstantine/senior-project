@@ -59,9 +59,6 @@ cc.Level.prototype.setUp = function() {
   this.attempts = 0;
 
   var self = this;
-  lime.scheduleManager.schedule(function (dt) {
-    self.checkCollisions();
-  });
 
   this.setAnchorPoint(0,0);
   this.world = new cc.World(this.levelNum);
@@ -75,7 +72,9 @@ cc.Level.prototype.setUp = function() {
   this.toolbox = new cc.Toolbox(this.levelNum, this.actionPlan, this).setPosition(0,500);
   this.appendChild(this.toolbox);
 
-  var self = this;
+  lime.scheduleManager.schedule(function (dt) {
+    self.checkCollisions();
+  });
   this.sub = amplify.subscribe("LevelAttempted", function() {
     self.levelAttempted(self.levelNum);
   });
@@ -85,16 +84,20 @@ cc.Level.prototype.levelAttempted = function(levelNum) {
   switch (levelNum) {
     case 1:
       if (this.robotExitedDoor()) {
-        this.levelPassed();
-      } else this.levelFailed();
+        return this.levelPassed();
+      }
       break;
     case 2:
       if (this.world.coinGrabbed && this.robotExitedDoor()) {
-         this.levelPassed();
-      } else this.levelFailed();
+        return this.levelPassed();
+      }
       break;
+    case 3:
+
     default:
+      break;
   }
+  this.levelFailed();
 };
 
 cc.Level.prototype.robotExitedDoor = function() {
@@ -104,7 +107,6 @@ cc.Level.prototype.robotExitedDoor = function() {
 cc.Level.prototype.levelFailed = function() {
   // TODO: show hint
   this.attempts++; // make hint available for attempts>1, only show by default after first
-  // TODO: reset world
   this.reset();
 };
 
@@ -120,11 +122,13 @@ cc.Level.prototype.reset = function() {
 };
 
 cc.Level.prototype.checkCollisions = function() {
-  for (var i=0; i<this.world.colliders.length; i++) {
-    var col = this.world.colliders[i];
-    if (goog.math.Box.intersects(this.robot.getBoundingBox(), col.getBoundingBox())) {
-      if (col.robotCollided) {
-        col.robotCollided();
+  if (this.world && this.world.colliders) {
+    for (var i=0; i<this.world.colliders.length; i++) {
+      var col = this.world.colliders[i];
+      if (goog.math.Box.intersects(this.robot.getBoundingBox(), col.getBoundingBox())) {
+        if (col.robotCollided) {
+          col.robotCollided();
+        }
       }
     }
   }
