@@ -2,8 +2,10 @@ goog.provide('cc.Toolbox');
 
 goog.require('cc.Robot');
 goog.require('cc.Tool');
+goog.require('cc.ToolboxItem');
 goog.require('cc.World');
 goog.require('cc.Message');
+
 
 
 cc.Toolbox = function(levelNum, actionPlan, level) {
@@ -17,18 +19,17 @@ cc.Toolbox = function(levelNum, actionPlan, level) {
   switch (levelNum) {
     // Intentional fall-through. Each level includes the previous level's tools, plus any new ones.
     case 3:
-      var forTool = new cc.ForTool();
+      var forTool = new cc.ToolboxItem("TIMES", 'Tells the robot to repeat actions or set of actions.');
       this.tools.unshift(forTool);
 
     case 2:
-      var jump = new lime.animation.Sequence(new lime.animation.MoveBy(0,-100), new lime.animation.MoveBy(0,100));
-      var jumpTool = new cc.Tool('JUMP', 'Makes the robot jump.', cc.Robot.jump(0));
+      var jumpTool = new cc.ToolboxItem('JUMP', 'Makes the robot jump.');
       this.tools.unshift(jumpTool);
 
     case 1:
     
     default:
-      var moveTool = new cc.Tool('MOVE', 'Moves the robot forward.', cc.Robot.move(100,0));
+      var moveTool = new cc.ToolboxItem('MOVE', 'Moves the robot forward.');
       this.tools.unshift(moveTool); // unshift adds new element to beginning of array
       break;
   }
@@ -40,73 +41,23 @@ cc.Toolbox = function(levelNum, actionPlan, level) {
   el.style.overflowX = "scroll";
 
   var self = this;
-  amplify.subscribe("RemoveTool", function(tool) {
+  amplify.subscribe("RemoveDropTarget", function(tool) {
     self.removeDropTarget(tool);
+  });
+  amplify.subscribe("AddDropTarget", function(tool) {
+    self.addDropTarget(tool);
   });
 
   for (var i=0; i<this.tools.length; i++) {
     var tool = this.tools[i];
     tool.setPosition(20+70*i, 20);
     this.appendChild(tool);
-
-    var self = this;
-    goog.events.listen(tool, ['mousedown'], function(event) {
-      var tool = event.currentTarget;
-      var dragObject = event.currentTarget.dragObject;
-      var draggedTool = event.currentTarget;
-      self.level.getParent().appendChild(dragObject);
-      dragObject.setPosition(self.localToNode(draggedTool.getPosition(),self.level.getParent())).setHidden(false);
-      var drag = event.startDrag(false, null, dragObject);
-      for (var i=0; i<self.dropTargets.length; i++) {
-        drag.addDropTarget(self.dropTargets[i]);
-      }
-      event.event.stopPropagation();
-
-     // Drop into target and animate
-      goog.events.listen(drag, lime.events.Drag.Event.DROP, function(e){
-        var item = draggedTool.actionItem();
-        if (e.activeDropTarget == self.actionPlan) {
-          self.actionPlan.addAction(draggedTool, item);
-          if (draggedTool.id == "ForTool") {
-            self.addDropTarget(item);
-          }
-        } else {
-          // add as a subtool
-          var toolIndex = self.actionPlan.getChildAt(0).getChildIndex(e.activeDropTarget);
-          self.actionPlan.actions[toolIndex].addSubTool(draggedTool);
-          var newSprite = self.actionPlan.updateSpriteAt(toolIndex);
-          self.replaceDropTarget(e.activeDropTarget, newSprite);
-          e.stopPropagation();
-        }
-        dragObject.setHidden(true);
-      });
-      
-      // Move back if not dropped on target.
-      goog.events.listen(drag, lime.events.Drag.Event.CANCEL, function() {
-        if (draggedTool.startedDragging) {
-          draggedTool.startedDragging = false;
-        } else {
-          self.actionPlan.addAction(draggedTool, draggedTool.actionItem());
-        }
-        dragObject.setHidden(true);
-      });
-      // Move back if not dropped on target.
-      goog.events.listen(drag, lime.events.Drag.Event.START, function(){
-        draggedTool.startedDragging = true;
-      });
-
-    });
   }
 };
 goog.inherits(cc.Toolbox, lime.Sprite);
 
 cc.Toolbox.prototype.addDropTarget = function(target) {
   this.dropTargets.push(target);
-};
-
-cc.Toolbox.prototype.replaceDropTarget = function(old, newTarget) {
-  this.dropTargets.splice(this.dropTargets.indexOf(old), 1);
-  this.dropTargets.push(newTarget);
 };
 
 cc.Toolbox.prototype.removeDropTarget = function(target) {
