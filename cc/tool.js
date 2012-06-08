@@ -113,8 +113,11 @@ cc.ForTool.prototype.setCount = function(count) {
 
 cc.ForTool.prototype.actionItem = function() {
   var sprite = goog.base(this, "actionItem");
-  if (!this.count) {
-    this.count = prompt ("Enter # of times to repeat");
+  if(!this.count) {
+    this.count = parseInt(prompt("Enter # of times to repeat"));
+    while (!this.count) {
+      this.count = parseInt(prompt("Please enter a number. The robot will repeat the commands inside the Times tool this many times."));
+    }
   }
   sprite.appendChild(new lime.Label(this.count).setPosition(10,10));
   for (var i=0; i<this.tools.length; i++) {
