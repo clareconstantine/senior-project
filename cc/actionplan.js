@@ -4,7 +4,7 @@ goog.require('cc.World');
 goog.require('cc.Toolbox');
 goog.require('lime.animation.Sequence');
 
-cc.ActionPlan = function() {
+cc.ActionPlan = function(toolbox) {
   goog.base(this);
 
   var self = this;
@@ -24,7 +24,9 @@ cc.ActionPlan = function() {
 
   this.runButton = new lime.GlossyButton("RUN").setSize(100,50);
   this.runButton.setAnchorPoint(0,0).setColor("#678").setPosition(75,550);
-  goog.events.listen(this.runButton, ['click'], function(e) { self.run(); });
+  goog.events.listen(this.runButton, ['click'], function(e) {
+    self.run();
+  });
   this.appendChild(this.runButton);
 
   this.planLabel = new lime.Label("Commands:").setFontSize(25).setFontColor('#fff').setPosition(5,5).setAnchorPoint(0,0);
@@ -32,6 +34,10 @@ cc.ActionPlan = function() {
 
   this.sub = amplify.subscribe("ToolSelected", function( tool ) {
       self.addAction(tool);
+  });
+
+  amplify.subscribe("RemoveSubTool", function (tool) {
+    self.updateSpriteAt(self.actions.indexOf(tool));
   });
 };
 goog.inherits(cc.ActionPlan, lime.Sprite);
@@ -41,17 +47,22 @@ cc.ActionPlan.prototype.addAction = function(tool, actionItem) {
   var sprite = actionItem;
   sprite.setPosition(25, 35+50*(this.actions.length-1));
 
-  var xButton = new lime.Label("x").setFontSize(15);
-  xButton.setAnchorPoint(1,0).setPosition(95,0);
   var self = this;
-  goog.events.listen(xButton, ['click'], function(e) { 
+  goog.events.listen(sprite.xButton, ['click'], function(e) { 
     self.removeAction(tool); 
   });
-  sprite.appendChild(xButton);
 
   this.scroll.appendChild(sprite);
 };
 
+cc.ActionPlan.prototype.updateSpriteAt = function(index) {
+  var oldSprite = this.scroll.getChildAt(index);
+  var newSprite = this.actions[index].actionItem().setPosition(oldSprite.getPosition()).setAnchorPoint(0,0);
+  this.scroll.removeChildAt(index)
+  this.scroll.appendChild(newSprite);
+  this.scroll.setChildIndex(newSprite, index);
+  return newSprite;
+};
 cc.ActionPlan.prototype.removeAction = function(tool) {
   var index = this.actions.indexOf(tool);
   this.actions.splice(index,1);
@@ -59,9 +70,13 @@ cc.ActionPlan.prototype.removeAction = function(tool) {
   for (var i=index; i<this.actions.length; i++) {
     this.scroll.getChildAt(i).setPosition(25, 20+50*i);
   }
+  amplify.publish("RemoveTool", tool);
 };
 
 cc.ActionPlan.prototype.run = function() {
+  var self = this;
+  goog.events.removeAll(self.runButton);
+  self.runButton.setOpacity(.6);
   if (this.actions.length < 1) {
     alert("Click on actions to give the robot directions, then click RUN to see him do them!");  
     return;
@@ -78,6 +93,10 @@ cc.ActionPlan.prototype.run = function() {
   }
   amplify.publish("RunSequence", published);
   goog.events.listenOnce(published,lime.animation.Event.STOP,function(e){
+    goog.events.listen(self.runButton, ['click'], function(e) {
+      self.run();
+    });
+    self.runButton.setOpacity(1);
     amplify.publish("LevelAttempted", this);
   })
 };

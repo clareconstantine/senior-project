@@ -38,6 +38,11 @@ cc.Toolbox = function(levelNum, actionPlan, level) {
   var el = this.getDeepestDomElement();
   el.style.overflowX = "scroll";
 
+  var self = this;
+  amplify.subscribe("RemoveTool", function(tool) {
+    self.removeDropTarget(tool);
+  });
+
   for (var i=0; i<this.tools.length; i++) {
     var tool = this.tools[i];
     tool.setPosition(20+70*i, 20);
@@ -52,22 +57,33 @@ cc.Toolbox = function(levelNum, actionPlan, level) {
     });
 
     var self = this;
-    goog.events.listen(tool, 'mousedown', function(e) {
-      var dragObject = e.currentTarget.dragObject;
-      var draggedTool = e.currentTarget;
+    goog.events.listen(tool, 'mousedown', function(event) {
+      var dragObject = event.currentTarget.dragObject;
+      var draggedTool = event.currentTarget;
       self.level.getParent().appendChild(dragObject);
       dragObject.setPosition(self.localToNode(draggedTool.getPosition(),self.level.getParent())).setHidden(false);
-      var drag = e.startDrag(false, null, dragObject);
+      var drag = event.startDrag(false, null, dragObject);
       for (var i=0; i<self.dropTargets.length; i++) {
         drag.addDropTarget(self.dropTargets[i]);
       }
-      e.event.stopPropagation();
+      event.event.stopPropagation();
 
      // Drop into target and animate
       goog.events.listen(drag, lime.events.Drag.Event.DROP, function(e){
         var item = draggedTool.actionItem();
-        self.actionPlan.addAction(draggedTool, item);
-        self.addDropTarget(item);
+        if (e.activeDropTarget == self.actionPlan) {
+          self.actionPlan.addAction(draggedTool, item);
+          if (draggedTool.id == "ForTool") {
+            self.addDropTarget(item);
+          }
+        } else {
+          // add as a subtool
+          var toolIndex = self.actionPlan.getChildAt(0).getChildIndex(e.activeDropTarget);
+          self.actionPlan.actions[toolIndex].addSubTool(draggedTool);
+          var newSprite = self.actionPlan.updateSpriteAt(toolIndex);
+          self.replaceDropTarget(e.activeDropTarget, newSprite);
+          e.stopPropagation();
+        }
         dragObject.setHidden(true);
       });
       
@@ -84,6 +100,16 @@ goog.inherits(cc.Toolbox, lime.Sprite);
 cc.Toolbox.prototype.addDropTarget = function(target) {
   this.dropTargets.push(target);
 };
+
+cc.Toolbox.prototype.replaceDropTarget = function(old, newTarget) {
+  this.dropTargets.splice(this.dropTargets.indexOf(old), 1);
+  this.dropTargets.push(newTarget);
+};
+
+cc.Toolbox.prototype.removeDropTarget = function(target) {
+  this.dropTargets.splice(this.dropTargets.indexOf(target), 1);
+};
+
 
 cc.Toolbox.prototype.getTools = function() {
   return this.tools;

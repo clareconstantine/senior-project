@@ -34,7 +34,22 @@ cc.Tool.prototype.dragObject = function() {
 };
 
 cc.Tool.prototype.getAnimation = function() {
-  return this.animation;
+  if (this.animation) return this.animation;
+  else {
+    var animation = null;
+    if (this.tools) { // For things with subtools
+      var subAnimations = [];
+      for (var i=0; i<this.tools.length; i++) {
+        subAnimations.push(this.tools[i].getAnimation());
+      }
+      if (subAnimations.length < 2) {
+        animation = subAnimations[0];
+      } else {
+        animation = new lime.animation.Sequence(subAnimations);
+      }
+      return animation;
+    }
+  }
 };
 
 cc.Tool.prototype.actionItem = function() {
@@ -42,6 +57,10 @@ cc.Tool.prototype.actionItem = function() {
   sprite.setAnchorPoint(0,0).setSize(100,30).setFill(this.fillColor);
   var nameLabel = new lime.Label(this.name).setAnchorPoint(0,0).setFontSize(20).setPosition(25, 5);
   sprite.appendChild(nameLabel);
+  
+  sprite.xButton = new lime.Label("x").setFontSize(15);
+  sprite.xButton.setAnchorPoint(1,0).setPosition(95,0);
+  sprite.appendChild(sprite.xButton);
 
   // TODO: listen for hover to become draggable, removable, etc
   return sprite;
@@ -52,11 +71,20 @@ cc.Tool.prototype.addSubTool = function(tool) {
     this.tools.push(tool);
   }
 };
+cc.Tool.prototype.removeSubTool = function(tool) {
+  if (this.tools) {
+    var oldSelf = this;
+    this.tools.splice(this.tools.indexOf(tool),1);
+    var self = this;
+    amplify.publish("RemoveSubTool", oldSelf, self);
+  }
+};
 
 cc.ForTool = function() {
   goog.base(this, "times", "specify a number of times to do some actions");
-  this.count = 0;
+  this.count = null;
   this.tools = new Array();
+<<<<<<< HEAD
   this.desc = 'Tells the robot to repeat actions or sets of actions';
   this.fxn = function() {
     for (var i=0; i<this.count; i++) {
@@ -65,6 +93,9 @@ cc.ForTool = function() {
       }
     }
   };
+=======
+  this.id = "ForTool";
+>>>>>>> 68e498316e6000a3f0c2a9376075ecdaaef919b8
 
   this.showDropHighlight = function(){
     this.runAction(new lime.animation.FadeTo(.6).setDuration(.3));
@@ -75,14 +106,37 @@ cc.ForTool = function() {
 };
 goog.inherits(cc.ForTool, cc.Tool)
 
+cc.ForTool.prototype.getAnimation = function() {
+  var singleAnimation = goog.base(this, "getAnimation");
+  var animation = singleAnimation;
+  for (var i=1; i<this.count; i++) {
+    animation = new lime.animation.Sequence(singleAnimation, animation);
+  }
+  return animation;
+};
+
 cc.ForTool.prototype.setCount = function(count) {
   this.count = count;
 };
 
 cc.ForTool.prototype.actionItem = function() {
   var sprite = goog.base(this, "actionItem");
-  var count = prompt ("Enter # of times to repeat");
-  this.setCount(count);
-  sprite.appendChild(new lime.Label(count).setPosition(10,10));
+  if (!this.count) {
+    this.count = prompt ("Enter # of times to repeat");
+  }
+  sprite.appendChild(new lime.Label(this.count).setPosition(10,10));
+  for (var i=0; i<this.tools.length; i++) {
+    var tool = this.tools[i];
+    var subSprite = tool.actionItem().setSize(90,30).setPosition(10, 30+i*40).setFill('#855');
+    // var xButton = new lime.Label("x").setFontSize(15);
+    // xButton.setAnchorPoint(1,0).setPosition(95,0);
+    var self = this;
+    goog.events.listen(subSprite.xButton, ['click'], function(e) { 
+      self.removeSubTool(tool);
+    });
+    //subSprite.appendChild(xButton);
+    sprite.appendChild(subSprite);
+  }
+  sprite.setSize(sprite.getSize().width, 30 + this.tools.length*40);
   return sprite;
-}
+};

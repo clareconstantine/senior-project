@@ -58,6 +58,11 @@ cc.Level.HEIGHT = cc.World.HEIGHT + cc.Toolbox.HEIGHT;
 cc.Level.prototype.setUp = function() {
   this.attempts = 0;
 
+  var self = this;
+  lime.scheduleManager.schedule(function (dt) {
+    self.checkCollisions();
+  });
+
   this.setAnchorPoint(0,0);
   this.world = new cc.World(this.levelNum);
   this.appendChild(this.world);
@@ -84,7 +89,7 @@ cc.Level.prototype.levelAttempted = function(levelNum) {
       } else this.levelFailed();
       break;
     case 2:
-      if (this.world.coin.wasCollected) {
+      if (this.world.coinGrabbed) {
          this.levelPassed();
       } else this.levelFailed();
       break;
@@ -107,6 +112,17 @@ cc.Level.prototype.levelPassed = function() {
 
 cc.Level.prototype.reset = function() {
   this.robot.setPosition(10,350);
+};
+
+cc.Level.prototype.checkCollisions = function() {
+  for (var i=0; i<this.world.colliders.length; i++) {
+    var col = this.world.colliders[i];
+    if (goog.math.Box.intersects(this.robot.getBoundingBox(), col.getBoundingBox())) {
+      if (col.robotCollided) {
+        col.robotCollided();
+      }
+    }
+  }
 };
 
 cc.Level.prototype.animateSolution = function(levelNum) {

@@ -11,11 +11,7 @@ cc.World = function(levelNum) {
   var label = new lime.Label("Level " + levelNum).setPosition(750, 20);
   this.appendChild(label);
 
-  // Represents world
-  this.grid = new Array(8);
-  for (var i=0; i<8; i++) {
-    this.grid[i] = new Array(8);
-  }
+  this.colliders = [];
 
   this.setAnchorPoint(0,0);
   this.setUpWorld(levelNum);
@@ -27,6 +23,7 @@ cc.World.WIDTH = 800;
 
 cc.World.prototype.setUpWorld = function(level) {
 
+  var self = this;
   var groundColor1 = '#222';
   var groundColor2 = '#575';
   var backgroundColor = '#ccf';
@@ -43,9 +40,13 @@ cc.World.prototype.setUpWorld = function(level) {
       this.coin = new lime.Circle().setSize(30,30).setFill('#FFC125');
       this.placeChild(this.coin, 4, 3);
       this.setChildIndex(this.coin, 0);
+      this.coinGrabbed = false;
+      this.colliders.push(this.coin);
 
-      this.coin.wasCollected = false;
-      //goog.events.listen
+      this.coin.robotCollided = function() {
+        self.coin.setHidden(true);
+        self.coinGrabbed = true;
+      }
 
       break;
     default:
