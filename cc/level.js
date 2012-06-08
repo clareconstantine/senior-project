@@ -47,6 +47,11 @@ cc.Level = function(levelNum, robot, actionPlan) {
   });
   amplify.unsubscribe("ToolDescClicked", this.dsub);
 
+  this.hsub = amplify.subscribe("MessageHidden", function(){
+    self.reset();
+  });
+  amplify.unsubscribe("MessageHidden", this.hsub);
+
 
 };
 goog.inherits(cc.Level,lime.Sprite);
@@ -108,21 +113,21 @@ cc.Level.prototype.levelFailed = function() {
   var notFarEnough = 'Send the robot all the way into the tunnel on the right';
   switch (this.levelNum) {
     case 1:
-      if (this.robot.getPosition().x < 600) {
+      if (!this.robotExitedDoor()) {
         this.message.show(notFarEnough);
       }
       break;
     case 2:
-        if (!this.world.coinGrabbed) {
-          this.message.show('Jump up and grab the coin on the way!');
-        } else if (this.robot.getPosition().x < cc.World.WIDTH){
-          this.message.show(notFarEnough);
-        }
+      if (!this.robotExitedDoor()){
+        this.message.show(notFarEnough);
+      } else if (!this.world.coinGrabbed) {
+        this.message.show('Jump up and grab the coin on the way!');
+      }
       break;
     default:
   }
   // TODO: have it not reset until they click ok on message
-  this.reset();
+//  this.reset();
 };
 
 cc.Level.prototype.levelPassed = function() {
