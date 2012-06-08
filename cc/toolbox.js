@@ -1,5 +1,6 @@
 goog.provide('cc.Toolbox');
 
+goog.require('cc.Robot');
 goog.require('cc.Tool');
 goog.require('cc.World');
 goog.require('cc.Message');
@@ -21,13 +22,13 @@ cc.Toolbox = function(levelNum, actionPlan, level) {
 
     case 2:
       var jump = new lime.animation.Sequence(new lime.animation.MoveBy(0,-100), new lime.animation.MoveBy(0,100));
-      var jumpTool = new cc.Tool('jump', 'Makes the robot jump', jump);
+      var jumpTool = new cc.Tool('JUMP', 'Makes the robot jump.', cc.Robot.jump(0));
       this.tools.unshift(jumpTool);
 
     case 1:
     
     default:
-      var moveTool = new cc.Tool('move', 'Moves the robot forward', new lime.animation.MoveBy(100,0));
+      var moveTool = new cc.Tool('MOVE', 'Moves the robot forward.', cc.Robot.move(100,0));
       this.tools.unshift(moveTool); // unshift adds new element to beginning of array
       break;
   }
@@ -47,14 +48,6 @@ cc.Toolbox = function(levelNum, actionPlan, level) {
     var tool = this.tools[i];
     tool.setPosition(20+70*i, 20);
     this.appendChild(tool);
-
-    // adds ? button under each tool to display description of tool
-    var descButton = new lime.Label(" ? ").setFontSize(18).setFill('#fff').setAnchorPoint(.5, 0);
-    descButton.setAnchorPoint(0,0).setPosition(36+70*i,79);
-    this.appendChild(descButton);
-    goog.events.listen(descButton, 'click', function() {
-      amplify.publish("ToolDescClicked", tool);
-    });
 
     var self = this;
     goog.events.listen(tool, ['mousedown'], function(event) {
@@ -91,11 +84,11 @@ cc.Toolbox = function(levelNum, actionPlan, level) {
       // Move back if not dropped on target.
       goog.events.listen(drag, lime.events.Drag.Event.CANCEL, function() {
         if (draggedTool.startedDragging) {
-          dragObject.setHidden(true);
           draggedTool.startedDragging = false;
         } else {
           self.actionPlan.addAction(draggedTool, draggedTool.actionItem());
         }
+        dragObject.setHidden(true);
       });
       // Move back if not dropped on target.
       goog.events.listen(drag, lime.events.Drag.Event.START, function(){

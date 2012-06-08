@@ -37,7 +37,15 @@ cc.Robot = function() {
 };
 goog.inherits(cc.Robot, lime.Sprite);
 
-cc.Robot.prototype.move = function(dx, dy) {
-  var animation = new lime.animation.MoveBy(dx, dy);
+cc.Robot.move = function(dx, dy) {
+  var animation = new lime.animation.MoveBy(dx, dy).setDuration(0.6);
+  return animation;
+};
+
+cc.Robot.jump = function(dx) {
+  if (!dx) dx = 0;
+  var upJump = new lime.animation.MoveBy(dx/2, -100).setDuration(0.3).setEasing(lime.animation.Easing.EASEOUT);
+  var downJump = new lime.animation.MoveBy(dx/2, 100).setDuration(0.3).setEasing(lime.animation.Easing.EASEIN);
+  var animation = new lime.animation.Sequence(upJump, downJump);
   return animation;
 };

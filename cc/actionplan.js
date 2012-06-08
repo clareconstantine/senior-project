@@ -29,7 +29,7 @@ cc.ActionPlan = function(toolbox) {
   });
   this.appendChild(this.runButton);
 
-  this.planLabel = new lime.Label("Commands:").setFontSize(25).setFontColor('#fff').setPosition(5,5).setAnchorPoint(0,0);
+  this.planLabel = new lime.Label("COMMANDS").setFontSize(18).setFontColor('#fff').setPosition(10,10).setAnchorPoint(0,0);
   this.appendChild(this.planLabel);
 
   this.sub = amplify.subscribe("ToolSelected", function( tool ) {
@@ -45,7 +45,7 @@ goog.inherits(cc.ActionPlan, lime.Sprite);
 cc.ActionPlan.prototype.addAction = function(tool, actionItem) {
   this.actions.push(tool);
   var sprite = actionItem;
-  sprite.setPosition(25, 35+50*(this.actions.length-1));
+  sprite.setPosition(15, 40+50*(this.actions.length-1));
 
   var self = this;
   goog.events.listen(sprite.xButton, ['click'], function(e) { 
@@ -104,6 +104,15 @@ cc.ActionPlan.prototype.run = function() {
 cc.ActionPlan.prototype.clear = function() {
   this.actions = [];
   this.scroll.removeAllChildren();
+};
+
+cc.ActionPlan.prototype.usesForTool = function() {
+  for (var i=0; i<this.actions.length; i++) {
+    if (this.actions[i] instanceof cc.ForTool) {
+      return true;
+    }
+  }
+  return false;
 };
 
 

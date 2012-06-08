@@ -5,14 +5,21 @@ cc.Message = function() {
 
   this.setSize(400,200).setFill('#222').setStroke(5,'#000');
   this.setAnchorPoint(0,0);
+  // The title message
+  this.titleMsg = new lime.Label("").setFontSize(23).setFontWeight("bold").setFontColor('#fff').setAnchorPoint(0,0).setPosition(10, 10).setAlign('center').setSize(380,200);
+  // The text for the message field.
+  this.message =  new lime.Label("").setFontSize(22).setFontColor('#fff').setAnchorPoint(0,0).setPosition(10,40).setAlign('left').setSize(350,200);
+
+  this.appendChild(this.titleMsg);
+  this.appendChild(this.message);
 
   var self = this;
   this.setAnchorPoint(0,0);
-  var button = new lime.GlossyButton('ok!').setSize(50, 30).setPosition(200, 150).setColor('#5A5');
-  goog.events.listen(button, 'click', function() {
+  this.okButton = new lime.GlossyButton('ok!').setSize(50, 30).setPosition(200, 150).setColor('#5A5');
+  goog.events.listen(this.okButton, 'click', function() {
       self.hide();
   });
-  this.appendChild(button);
+  this.appendChild(this.okButton);
 };
 goog.inherits(cc.Message, lime.Sprite);
 
@@ -21,8 +28,8 @@ cc.Message.prototype.hide = function() {
   amplify.publish("MessageHidden");
 };
 
-cc.Message.prototype.show = function(text) {
-  var text = new lime.Label(text).setFontSize(20).setFontColor('#fff').setAnchorPoint(0,0).setPosition(10,10).setAlign('left').setSize(350,200);
-  this.appendChild(text);
+cc.Message.prototype.show = function(text, opt_text) {
+  this.titleMsg.setText(opt_text || "");
+  this.message.setText(text);
   this.setHidden(false);
 };

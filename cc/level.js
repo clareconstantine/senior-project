@@ -21,7 +21,7 @@ cc.Level = function(levelNum, robot, actionPlan) {
   this.actionPlan = actionPlan;
   this.setUp();
 
-  this.directions = DIRECTIONS[levelNum-1] || "Directions";
+  this.directions = DIRECTIONS[levelNum-1] || "";
   this.password = PASSWORDS[levelNum-1] || '';
   this.message = new cc.Message();
   this.message.setPosition(200, 100).setHidden(true);
@@ -31,7 +31,7 @@ cc.Level = function(levelNum, robot, actionPlan) {
   var self = this;
   var helpButton = new lime.GlossyButton('Hint').setSize(60, 30).setAnchorPoint(0,0).setPosition(40, 20).setColor('#77d');
   goog.events.listen(helpButton, 'click', function() {
-      self.message.show(self.directions);
+      self.message.show(self.directions, "Directions");
   });
   this.appendChild(helpButton);
 
@@ -42,10 +42,10 @@ cc.Level = function(levelNum, robot, actionPlan) {
   this.appendChild(solutionButton);
   
   // TODO: make this part work...
-  this.dsub = amplify.subscribe("ToolDescClicked", function(){ 
-    self.message.show(this.desc);
+  this.dsub = amplify.subscribe("ShowDescription", function(msg, toolName){ 
+    self.message.show(msg, toolName);
   });
-  amplify.unsubscribe("ToolDescClicked", this.dsub);
+  //amplify.unsubscribe("ToolDescClicked", this.dsub);
 
   this.hsub = amplify.subscribe("MessageHidden", function(){
     self.reset();
@@ -64,9 +64,6 @@ cc.Level.prototype.setUp = function() {
   this.attempts = 0;
 
   var self = this;
-  lime.scheduleManager.schedule(function (dt) {
-    self.checkCollisions();
-  });
 
   this.setAnchorPoint(0,0);
   this.world = new cc.World(this.levelNum);
@@ -80,54 +77,66 @@ cc.Level.prototype.setUp = function() {
   this.toolbox = new cc.Toolbox(this.levelNum, this.actionPlan, this).setPosition(0,500);
   this.appendChild(this.toolbox);
 
-  var self = this;
+  lime.scheduleManager.schedule(function (dt) {
+    self.checkCollisions();
+  });
   this.sub = amplify.subscribe("LevelAttempted", function() {
     self.levelAttempted(self.levelNum);
   });
 };
 
 cc.Level.prototype.levelAttempted = function(levelNum) {
+  var msg = "";
+  var notFarEnough = "Make sure you send the robot all the way to the next cavern!";
   switch (levelNum) {
     case 1:
       if (this.robotExitedDoor()) {
-        this.levelPassed();
-      } else this.levelFailed();
+        return this.levelPassed();
+      } else {
+        msg = notFarEnough;
+      }
       break;
     case 2:
-      if (this.world.coinGrabbed && this.robotExitedDoor()) {
-         this.levelPassed();
-      } else this.levelFailed();
+      if (this.world.collidersGrabbed() && this.robotExitedDoor()) {
+        return this.levelPassed();
+      } else if (!this.world.collidersGrabbed()) {
+        msg = "Jump up and grab the coin on the way!";
+      } else {
+        msg = notFarEnough;
+      }
       break;
+    case 3:
+      if (this.robotExitedDoor()) {
+        if (this.world.collidersGrabbed()) {
+          if (this.actionPlan.usesForTool()) {
+            return this.levelPassed();
+          } else {
+            msg = "That's a long program! Try using the Times tool. It lets you \
+                tell the robot to do things multiple times in a row.";
+          }
+        } else {
+          msg = "Make sure you grab all the coins!";
+        }
+      } else {
+        msg = notFarEnough;
+      }
     default:
+      break;
   }
+  this.levelFailed(msg);
 };
 
 cc.Level.prototype.robotExitedDoor = function() {
   return this.robot.getPosition().x > this.world.doorX;
 };
 
-cc.Level.prototype.levelFailed = function() {
-  // TODO: show hint
-  this.attempts++;// make hint available for attempts>1, only show by default after first
-  // provide feedback about their attempt
-  var notFarEnough = 'Send the robot all the way into the tunnel on the right';
-  switch (this.levelNum) {
-    case 1:
-      if (!this.robotExitedDoor()) {
-        this.message.show(notFarEnough);
-      }
-      break;
-    case 2:
-      if (!this.robotExitedDoor()){
-        this.message.show(notFarEnough);
-      } else if (!this.world.coinGrabbed) {
-        this.message.show('Jump up and grab the coin on the way!');
-      }
-      break;
-    default:
-  }
-  // TODO: have it not reset until they click ok on message
-//  this.reset();
+cc.Level.prototype.levelFailed = function(msg) {
+  this.message.show(msg || "", "Try again.");
+  /// this.attempts++; // make hint available for attempts>1, only show by default after first
+  var self = this;
+  goog.events.listen(this.message.okButton, 'click', function() {
+    self.reset();
+  });
 };
 
 cc.Level.prototype.levelPassed = function() {
@@ -142,11 +151,13 @@ cc.Level.prototype.reset = function() {
 };
 
 cc.Level.prototype.checkCollisions = function() {
-  for (var i=0; i<this.world.colliders.length; i++) {
-    var col = this.world.colliders[i];
-    if (goog.math.Box.intersects(this.robot.getBoundingBox(), col.getBoundingBox())) {
-      if (col.robotCollided) {
-        col.robotCollided();
+  if (this.world && this.world.colliders) {
+    for (var i=0; i<this.world.colliders.length; i++) {
+      var col = this.world.colliders[i];
+      if (goog.math.Box.intersects(this.robot.getBoundingBox(), col.getBoundingBox())) {
+        if (col.robotCollided) {
+          col.robotCollided();
+        }
       }
     }
   }
