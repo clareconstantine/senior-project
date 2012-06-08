@@ -2,6 +2,7 @@ goog.provide('cc.Toolbox');
 
 goog.require('cc.Tool');
 goog.require('cc.World');
+goog.require('cc.Message');
 
 
 cc.Toolbox = function(levelNum, actionPlan, level) {
@@ -26,7 +27,7 @@ cc.Toolbox = function(levelNum, actionPlan, level) {
     case 1:
     
     default:
-      var moveTool = new cc.Tool('move', 'move the robot', new lime.animation.MoveBy(100,0));
+      var moveTool = new cc.Tool('move', 'Moves the robot forward', new lime.animation.MoveBy(100,0));
       this.tools.unshift(moveTool); // unshift adds new element to beginning of array
       break;
   }
@@ -46,6 +47,14 @@ cc.Toolbox = function(levelNum, actionPlan, level) {
     var tool = this.tools[i];
     tool.setPosition(20+70*i, 20);
     this.appendChild(tool);
+
+    // adds ? button under each tool to display description of tool
+    var descButton = new lime.Label(" ? ").setFontSize(18).setFill('#fff').setAnchorPoint(.5, 0);
+    descButton.setAnchorPoint(0,0).setPosition(36+70*i,79);
+    this.appendChild(descButton);
+    goog.events.listen(descButton, 'click', function() {
+      amplify.publish("ToolDescClicked", tool);
+    });
 
     var self = this;
     goog.events.listen(tool, 'mousedown', function(event) {

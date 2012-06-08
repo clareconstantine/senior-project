@@ -59,8 +59,8 @@ cc.Game.prototype.showStartPage = function() {
       50, 125).setFontSize(20);
   layer.appendChild(intro);
 
-  var directions = "INSTRUCTIONS: Select items from the toolbox to add to your action plan."
-  directions += "When you're ready, click the RUN button to try your solution.";
+  var directions = "INSTRUCTIONS: Drag items from the toolbox to your command list on the right."
+  directions += " When you're ready, click the RUN button to try your solution.";
   var dLabel = new lime.Label(directions).setFontColor('#fff').setAnchorPoint(0,0).setPosition(
       50, 175).setFontSize(20).setAlign('left').setSize(800,300);
   layer.appendChild(dLabel);

@@ -29,6 +29,9 @@ cc.ActionPlan = function(toolbox) {
   });
   this.appendChild(this.runButton);
 
+  this.planLabel = new lime.Label("Commands:").setFontSize(25).setFontColor('#fff').setPosition(5,5).setAnchorPoint(0,0);
+  this.appendChild(this.planLabel);
+
   this.sub = amplify.subscribe("ToolSelected", function( tool ) {
       self.addAction(tool);
   });
@@ -42,7 +45,7 @@ goog.inherits(cc.ActionPlan, lime.Sprite);
 cc.ActionPlan.prototype.addAction = function(tool, actionItem) {
   this.actions.push(tool);
   var sprite = actionItem;
-  sprite.setPosition(25, 20+50*(this.actions.length-1));
+  sprite.setPosition(25, 35+50*(this.actions.length-1));
 
   var self = this;
   goog.events.listen(sprite.xButton, ['click'], function(e) { 
@@ -74,7 +77,10 @@ cc.ActionPlan.prototype.run = function() {
   var self = this;
   goog.events.removeAll(self.runButton);
   self.runButton.setOpacity(.6);
-  if (this.actions.length < 1) return;
+  if (this.actions.length < 1) {
+    alert("Click on actions to give the robot directions, then click RUN to see him do them!");  
+    return;
+  }
   var animations = [];
   for (var i=0; i<this.actions.length; i++) {
     animations.push(this.actions[i].getAnimation());
@@ -83,8 +89,8 @@ cc.ActionPlan.prototype.run = function() {
   if (animations.length < 2) {
     published = animations[0];
   } else {
-     published = new lime.animation.Sequence(animations);
-  };
+    published = new lime.animation.Sequence(animations);
+  }
   amplify.publish("RunSequence", published);
   goog.events.listenOnce(published,lime.animation.Event.STOP,function(e){
     goog.events.listen(self.runButton, ['click'], function(e) {
