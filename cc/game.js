@@ -96,8 +96,11 @@ cc.Game.prototype.showLevelTitlePage = function(level) {
   background.setAnchorPoint(0,0).setFill('#000');
   layer.appendChild(background);
 
-  var title = new lime.Label('Level ' + level.levelNum).setFontColor('#fff').setAnchorPoint(0,0).setPosition(
-      50, 50).setFontSize(30);
+  if (level.levelNum > 1) {
+    layer.appendChild(new lime.Label("SUCCESS!").setFontColor("#fff").setFontSize(30).setPosition(450,40));
+  }
+  var title = new lime.Label('LEVEL ' + level.levelNum).setFontColor('#fff').setAnchorPoint(0,0).setPosition(
+      50, 80).setFontSize(25);
   layer.appendChild(title);
 
   var objective = "OBJECTIVE: " + level.directions;
@@ -108,7 +111,7 @@ cc.Game.prototype.showLevelTitlePage = function(level) {
   //TODO: Explain new tools
 
   if (level.levelNum > 1) {
-    var password = "LEVEL PASSWORD: " + level.password;
+    var password = "PASSWORD: " + level.password;
     var pLabel = new lime.Label(password).setFontColor('#fff').setAnchorPoint(0,0).setPosition(
       50, 225).setFontSize(20);
   layer.appendChild(pLabel);
