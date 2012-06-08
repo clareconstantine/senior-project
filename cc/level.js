@@ -84,17 +84,21 @@ cc.Level.prototype.setUp = function() {
 cc.Level.prototype.levelAttempted = function(levelNum) {
   switch (levelNum) {
     case 1:
-      if (this.robot.getPosition().x > 600) {
+      if (this.robotExitedDoor()) {
         this.levelPassed();
       } else this.levelFailed();
       break;
     case 2:
-      if (this.world.coinGrabbed && this.robot.getPosition().x > 700) {
+      if (this.world.coinGrabbed && this.robotExitedDoor()) {
          this.levelPassed();
       } else this.levelFailed();
       break;
     default:
   }
+};
+
+cc.Level.prototype.robotExitedDoor = function() {
+  return this.robot.getPosition().x > this.world.doorX;
 };
 
 cc.Level.prototype.levelFailed = function() {

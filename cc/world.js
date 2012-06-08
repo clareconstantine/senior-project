@@ -36,12 +36,17 @@ cc.World.prototype.setUpWorld = function(level) {
   switch (level) {
     case 1:
       this.door = new lime.Polygon().setFill('#663422');
-      this.door.addPoints(650,500, 700,350, 800,300, 800,500);
+      this.door.addPoints(560,500, 600,350, 700,275, 800,250, 800,500);
+      this.doorX = 600;
       this.appendChild(this.door);
       break;
     case 2:
       groundColor2 = '#555';
       backgroundColor = '#88a';
+
+      this.door = new lime.Sprite().setFill('#000').setSize(100, 150).setAnchorPoint(1,1).setPosition(800,500);
+      this.appendChild(this.door);
+      this.doorX = 700;
 
       this.coin = new lime.Circle().setSize(30,30).setFill('#FFC125');
       this.placeChild(this.coin, 4, 3);
