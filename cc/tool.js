@@ -57,6 +57,7 @@ cc.ForTool = function() {
   goog.base(this, "times", "specify a number of times to do some actions");
   this.count = 0;
   this.tools = new Array();
+  this.desc = 'Tells the robot to repeat actions or sets of actions';
   this.fxn = function() {
     for (var i=0; i<this.count; i++) {
       for (var j=0; j<this.tools.length; j++) {
