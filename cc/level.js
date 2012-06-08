@@ -29,9 +29,9 @@ cc.Level = function(levelNum, robot, actionPlan) {
   //TODO: disable rest of level while message is shown
 
   var self = this;
-  var helpButton = new lime.GlossyButton('Hint').setSize(60, 30).setAnchorPoint(0,0).setPosition(40, 20).setColor('#77d');
+  var helpButton = new lime.GlossyButton('Help').setSize(60, 30).setAnchorPoint(0,0).setPosition(40, 20).setColor('#77d');
   goog.events.listen(helpButton, 'click', function() {
-      self.message.show(self.directions, "Directions");
+      self.message.show(self.directions, "MISSION");
   });
   this.appendChild(helpButton);
 

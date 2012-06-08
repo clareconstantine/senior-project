@@ -5,6 +5,7 @@ cc.Message = function() {
 
   this.setSize(400,200).setFill('#222').setStroke(5,'#000');
   this.setAnchorPoint(0,0);
+
   // The title message
   this.titleMsg = new lime.Label("").setFontSize(23).setFontWeight("bold").setFontColor('#fff').setAnchorPoint(0,0).setPosition(10, 10).setAlign('center').setSize(380,200);
   // The text for the message field.
