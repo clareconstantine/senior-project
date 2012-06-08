@@ -1,12 +1,9 @@
 goog.provide('cc');
 
 goog.require('lime.Director');
-
 goog.require('cc.Game');
 
 SHOW_START_PAGE = true;
-//SHOW_START_PAGE = false;
-PASSWORDS = ['one','two'];
 
 // entrypoint
 cc.start = function() {
