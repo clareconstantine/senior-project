@@ -7,24 +7,34 @@ cc.Tool = function(name, desc, animation) {
 
   this.fillColor = "#ddd";
   this.setAnchorPoint(0,0);
-  this.setSize(50,50);
   this.setFill(this.fillColor);
   this.name = name || 'Code';
   this.desc = desc || 'Description';
   this.animation = animation;
   this.dragObject = this.dragObject().setHidden(true);
 
-  nameLabel = new lime.Label(name).setAnchorPoint(0,0).setFontSize(20).setPosition(0, 10);
+  var nameLabel = new lime.Label(this.name).setAnchorPoint(0,0).setFontSize(15).setPosition(5, 10);
   this.appendChild(nameLabel);
+  this.setSize(Math.min(50, nameLabel.measureText().width+20),50);
 
   this.startedDragging = false;
 
+  // adds ? button under each tool to display description of tool
+  var self = this;
+  var descButton = new lime.Label("?").setFontSize(15).setAnchorPoint(1, 1).setPosition(46,48);
+  this.appendChild(descButton);
+  goog.events.listen(descButton, ['mousedown', 'click'], function(e) {
+    amplify.publish("ShowDescription", self.desc, self.name);
+    e.event.stopPropagation();
+  });
 };
 goog.inherits(cc.Tool, lime.Sprite);
 
 cc.Tool.prototype.dragObject = function() {
-  var sprite = new lime.Sprite().setFill("#ddd").setAnchorPoint(0,0).setSize(50,50);
-  sprite.appendChild(new lime.Label(this.name).setAnchorPoint(0,0).setPosition(0,10).setFontSize(20));
+  var sprite = new lime.Sprite().setFill("#ddd").setAnchorPoint(0,0);
+  var nameLabel = new lime.Label(this.name).setAnchorPoint(0,0).setFontSize(15).setPosition(5, 10);
+  sprite.appendChild(nameLabel);
+  sprite.setSize(Math.min(50, nameLabel.measureText().width+20),50);
   return sprite;
 };
 
@@ -50,7 +60,7 @@ cc.Tool.prototype.getAnimation = function() {
 cc.Tool.prototype.actionItem = function() {
   var sprite = new lime.Sprite();
   sprite.setAnchorPoint(0,0).setSize(100,30).setFill(this.fillColor);
-  var nameLabel = new lime.Label(this.name).setAnchorPoint(0,0).setFontSize(20).setPosition(25, 5);
+  var nameLabel = new lime.Label(this.name).setAnchorPoint(0,0).setFontSize(18).setPosition(20, 5);
   sprite.appendChild(nameLabel);
   
   sprite.xButton = new lime.Label("x").setFontSize(15);
@@ -76,7 +86,7 @@ cc.Tool.prototype.removeSubTool = function(tool) {
 };
 
 cc.ForTool = function() {
-  goog.base(this, "times", "specify a number of times to do some actions");
+  goog.base(this, "TIMES", "specify a number of times to do some actions");
   this.count = null;
   this.tools = new Array();
   this.desc = 'Tells the robot to repeat actions or sets of actions';
