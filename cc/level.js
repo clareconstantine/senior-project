@@ -89,7 +89,7 @@ cc.Level.prototype.levelAttempted = function(levelNum) {
       } else this.levelFailed();
       break;
     case 2:
-      if (this.world.coinGrabbed) {
+      if (this.world.coinGrabbed && this.robot.getPosition().x > cc.World.WIDTH) {
          this.levelPassed();
       } else this.levelFailed();
       break;
@@ -99,8 +99,25 @@ cc.Level.prototype.levelAttempted = function(levelNum) {
 
 cc.Level.prototype.levelFailed = function() {
   // TODO: show hint
-  this.attempts++; // make hint available for attempts>1, only show by default after first
-  // TODO: reset world
+  this.attempts++;// make hint available for attempts>1, only show by default after first
+  // provide feedback about their attempt
+  var notFarEnough = 'Send the robot all the way into the tunnel on the right';
+  switch (this.levelNum) {
+    case 1:
+      if (this.robot.getPosition().x < 600) {
+        this.message.show(notFarEnough);
+      }
+      break;
+    case 2:
+        if (!this.world.coinGrabbed) {
+          this.message.show('Jump up and grab the coin on the way!');
+        } else if (this.robot.getPosition().x < cc.World.WIDTH){
+          this.message.show(notFarEnough);
+        }
+      break;
+    default:
+  }
+  // TODO: have it not reset until they click ok on message
   this.reset();
 };
 
