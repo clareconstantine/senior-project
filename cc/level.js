@@ -89,13 +89,13 @@ cc.Level.prototype.levelAttempted = function(levelNum) {
       }
       break;
     case 2:
-      if (this.world.coinGrabbed && this.robotExitedDoor()) {
+      if (this.world.collidersGrabbed() && this.robotExitedDoor()) {
         return this.levelPassed();
       }
       break;
     case 3:
       if (this.robotExitedDoor()) {
-        if (this.world.collidersGrabbed() == this.world.numColliders()) {
+        if (this.world.collidersGrabbed()) {
           if (this.actionPlan.usesForTool()) {
             return this.levelPassed();
           } else {

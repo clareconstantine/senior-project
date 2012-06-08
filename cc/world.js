@@ -38,7 +38,7 @@ cc.World.prototype.collidersGrabbed = function() {
   for (var i=0; i<this.numColliders(); i++) {
     if (this.colliders[i].wasGrabbed) count++;
   }
-  return count;
+  return count == this.numColliders();
 };
 
 cc.World.prototype.setUpWorld = function(level) {
