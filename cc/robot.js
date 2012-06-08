@@ -38,6 +38,6 @@ cc.Robot = function() {
 goog.inherits(cc.Robot, lime.Sprite);
 
 cc.Robot.prototype.move = function(dx, dy) {
-  var animation = new lime.animation.MoveBy(dx, dy);
+  var animation = new lime.animation.MoveBy(dx, dy).setDuration(0.01); /// TODO: Why isnt this working??? TOo slow...
   return animation;
 };
