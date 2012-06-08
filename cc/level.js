@@ -41,12 +41,9 @@ cc.Level = function(levelNum, robot, actionPlan) {
   });
   this.appendChild(solutionButton);
   
-  // TODO: make this part work...
   this.dsub = amplify.subscribe("ShowDescription", function(msg, toolName){ 
     self.message.show(msg, toolName);
   });
-  //amplify.unsubscribe("ToolDescClicked", this.dsub);
-
 
 };
 goog.inherits(cc.Level,lime.Sprite);
