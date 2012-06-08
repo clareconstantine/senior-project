@@ -57,7 +57,8 @@ cc.Toolbox = function(levelNum, actionPlan, level) {
     });
 
     var self = this;
-    goog.events.listen(tool, 'mousedown', function(event) {
+    goog.events.listen(tool, ['mousedown'], function(event) {
+      var tool = event.currentTarget;
       var dragObject = event.currentTarget.dragObject;
       var draggedTool = event.currentTarget;
       self.level.getParent().appendChild(dragObject);
@@ -88,8 +89,17 @@ cc.Toolbox = function(levelNum, actionPlan, level) {
       });
       
       // Move back if not dropped on target.
-      goog.events.listen(drag, lime.events.Drag.Event.CANCEL, function(){
-        dragObject.setHidden(true);
+      goog.events.listen(drag, lime.events.Drag.Event.CANCEL, function() {
+        if (draggedTool.startedDragging) {
+          dragObject.setHidden(true);
+          draggedTool.startedDragging = false;
+        } else {
+          self.actionPlan.addAction(draggedTool, draggedTool.actionItem());
+        }
+      });
+      // Move back if not dropped on target.
+      goog.events.listen(drag, lime.events.Drag.Event.START, function(){
+        draggedTool.startedDragging = true;
       });
 
     });

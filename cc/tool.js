@@ -17,12 +17,7 @@ cc.Tool = function(name, desc, animation) {
   nameLabel = new lime.Label(name).setAnchorPoint(0,0).setFontSize(20).setPosition(0, 10);
   this.appendChild(nameLabel);
 
-  goog.events.listen(this, ['hover'], function(e) {
-    alert(this.name);
-  }, false, this);
-  goog.events.listen(this, ['click'], function(e) {
-    amplify.publish("ToolSelected", this);
-  }, false, this);
+  this.startedDragging = false;
 
 };
 goog.inherits(cc.Tool, lime.Sprite);

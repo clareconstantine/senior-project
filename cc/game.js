@@ -24,6 +24,7 @@ cc.Game.prototype.playLevel = function(levelNum) {
   if (!this.actionPlan) {
     this.actionPlan = new cc.ActionPlan().setPosition(800,0);
   }
+  this.actionPlan.clear();
   var level = new cc.Level(levelNum, this.robot, this.actionPlan);
   this.showLevelTitlePage(level);
 };

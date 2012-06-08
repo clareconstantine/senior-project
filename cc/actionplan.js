@@ -101,6 +101,11 @@ cc.ActionPlan.prototype.run = function() {
   })
 };
 
+cc.ActionPlan.prototype.clear = function() {
+  this.actions = [];
+  this.scroll.removeAllChildren();
+};
+
 
 cc.ActionPlan.WIDTH = 150;
 cc.ActionPlan.HEIGHT = cc.World.HEIGHT + cc.Toolbox.HEIGHT;
