@@ -106,6 +106,13 @@ cc.ActionPlan.prototype.clear = function() {
   this.scroll.removeAllChildren();
 };
 
+cc.ActionPlan.prototype.usesForTool = function() {
+  for (var i=0; i<this.actions; i++) {
+    if (this.actions[i] instanceof cc.ForTool) return true;
+  }
+  return false;
+};
+
 
 cc.ActionPlan.WIDTH = 150;
 cc.ActionPlan.HEIGHT = cc.World.HEIGHT + cc.Toolbox.HEIGHT;

@@ -21,7 +21,7 @@ cc.Level = function(levelNum, robot, actionPlan) {
   this.actionPlan = actionPlan;
   this.setUp();
 
-  this.directions = DIRECTIONS[levelNum-1] || "Directions";
+  this.directions = DIRECTIONS[levelNum-1] || "";
   this.password = PASSWORDS[levelNum-1] || '';
   this.message = new cc.Message();
   this.message.setPosition(200, 100).setHidden(true);
@@ -31,7 +31,7 @@ cc.Level = function(levelNum, robot, actionPlan) {
   var self = this;
   var helpButton = new lime.GlossyButton('Hint').setSize(60, 30).setAnchorPoint(0,0).setPosition(40, 20).setColor('#77d');
   goog.events.listen(helpButton, 'click', function() {
-      self.message.show(self.directions);
+      self.message.show(self.directions, "Directions");
   });
   this.appendChild(helpButton);
 
@@ -81,6 +81,7 @@ cc.Level.prototype.setUp = function() {
 };
 
 cc.Level.prototype.levelAttempted = function(levelNum) {
+  var msg = "";
   switch (levelNum) {
     case 1:
       if (this.robotExitedDoor()) {
@@ -95,23 +96,32 @@ cc.Level.prototype.levelAttempted = function(levelNum) {
     case 3:
       if (this.robotExitedDoor()) {
         if (this.world.collidersGrabbed() == this.world.numColliders()) {
-          return this.levelPassed();
+          if (this.actionPlan.usesForTool()) {
+            return this.levelPassed();
+          } else {
+            msg = "That's a long program! Try using the Times tool. It lets you \
+                tell the robot to do things multiple times in a row.";
+          }
+        } else {
         }
       }
     default:
       break;
   }
-  this.levelFailed();
+  this.levelFailed(msg);
 };
 
 cc.Level.prototype.robotExitedDoor = function() {
   return this.robot.getPosition().x > this.world.doorX;
 };
 
-cc.Level.prototype.levelFailed = function() {
-  // TODO: show hint
-  this.attempts++; // make hint available for attempts>1, only show by default after first
-  this.reset();
+cc.Level.prototype.levelFailed = function(msg) {
+  this.message.show(msg || "", "Try again.");
+  /// this.attempts++; // make hint available for attempts>1, only show by default after first
+  var self = this;
+  goog.events.listen(this.message.okButton, 'click', function() {
+    self.reset();
+  });
 };
 
 cc.Level.prototype.levelPassed = function() {
