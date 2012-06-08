@@ -107,8 +107,10 @@ cc.ActionPlan.prototype.clear = function() {
 };
 
 cc.ActionPlan.prototype.usesForTool = function() {
-  for (var i=0; i<this.actions; i++) {
-    if (this.actions[i] instanceof cc.ForTool) return true;
+  for (var i=0; i<this.actions.length; i++) {
+    if (this.actions[i] instanceof cc.ForTool) {
+      return true;
+    }
   }
   return false;
 };
