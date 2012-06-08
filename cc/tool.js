@@ -79,7 +79,18 @@ cc.ForTool = function() {
   goog.base(this, "times", "specify a number of times to do some actions");
   this.count = null;
   this.tools = new Array();
+<<<<<<< HEAD
+  this.desc = 'Tells the robot to repeat actions or sets of actions';
+  this.fxn = function() {
+    for (var i=0; i<this.count; i++) {
+      for (var j=0; j<this.tools.length; j++) {
+        this.tools[j].execute();
+      }
+    }
+  };
+=======
   this.id = "ForTool";
+>>>>>>> 68e498316e6000a3f0c2a9376075ecdaaef919b8
 
   this.showDropHighlight = function(){
     this.runAction(new lime.animation.FadeTo(.6).setDuration(.3));
