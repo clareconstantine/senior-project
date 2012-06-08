@@ -88,6 +88,7 @@ cc.ForTool = function() {
     }
   };
   this.id = "ForTool";
+
   this.showDropHighlight = function(){
     this.runAction(new lime.animation.FadeTo(.6).setDuration(.3));
   };
