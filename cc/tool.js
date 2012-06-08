@@ -80,13 +80,6 @@ cc.ForTool = function() {
   this.count = null;
   this.tools = new Array();
   this.desc = 'Tells the robot to repeat actions or sets of actions';
-  this.fxn = function() {
-    for (var i=0; i<this.count; i++) {
-      for (var j=0; j<this.tools.length; j++) {
-        this.tools[j].execute();
-      }
-    }
-  };
   this.id = "ForTool";
 
   this.showDropHighlight = function(){
@@ -99,10 +92,11 @@ cc.ForTool = function() {
 goog.inherits(cc.ForTool, cc.Tool)
 
 cc.ForTool.prototype.getAnimation = function() {
-  var singleAnimation = goog.base(this, "getAnimation");
-  var animation = singleAnimation;
+  if (this.tools.length < 1) return new lime.animation.MoveBy(0,0);
+  var singleSequence = goog.base(this, "getAnimation");
+  var animation = singleSequence;
   for (var i=1; i<this.count; i++) {
-    animation = new lime.animation.Sequence(singleAnimation, animation);
+    animation = new lime.animation.Sequence(singleSequence, animation);
   }
   return animation;
 };
@@ -123,13 +117,10 @@ cc.ForTool.prototype.actionItem = function() {
   for (var i=0; i<this.tools.length; i++) {
     var tool = this.tools[i];
     var subSprite = tool.actionItem().setSize(90,30).setPosition(10, 30+i*40).setFill('#855');
-    // var xButton = new lime.Label("x").setFontSize(15);
-    // xButton.setAnchorPoint(1,0).setPosition(95,0);
     var self = this;
     goog.events.listen(subSprite.xButton, ['click'], function(e) { 
       self.removeSubTool(tool);
     });
-    //subSprite.appendChild(xButton);
     sprite.appendChild(subSprite);
   }
   sprite.setSize(sprite.getSize().width, 30 + this.tools.length*40);
