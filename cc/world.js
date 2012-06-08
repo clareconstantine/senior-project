@@ -21,6 +21,12 @@ goog.inherits(cc.World, lime.Sprite);
 cc.World.HEIGHT = 500;
 cc.World.WIDTH = 800;
 
+cc.World.prototype.reset = function() {
+  for (var i=0; i<this.colliders; i++) {
+    this.colliders[i].setHidden(false);
+  }
+};
+
 cc.World.prototype.setUpWorld = function(level) {
 
   var self = this;

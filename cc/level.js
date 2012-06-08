@@ -89,7 +89,7 @@ cc.Level.prototype.levelAttempted = function(levelNum) {
       } else this.levelFailed();
       break;
     case 2:
-      if (this.world.coinGrabbed) {
+      if (this.world.coinGrabbed && this.robot.getPosition().x > 700) {
          this.levelPassed();
       } else this.levelFailed();
       break;
@@ -112,6 +112,7 @@ cc.Level.prototype.levelPassed = function() {
 
 cc.Level.prototype.reset = function() {
   this.robot.setPosition(10,350);
+  this.world.reset();
 };
 
 cc.Level.prototype.checkCollisions = function() {
