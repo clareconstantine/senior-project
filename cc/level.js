@@ -45,6 +45,11 @@ cc.Level = function(levelNum, robot, actionPlan) {
     self.message.show(msg, toolName);
   });
 
+  this.hsub = amplify.subscribe("MessageHidden", function(){
+    self.reset();
+  });
+  amplify.unsubscribe("MessageHidden", this.hsub);
+
 };
 goog.inherits(cc.Level,lime.Sprite);
 
@@ -79,15 +84,22 @@ cc.Level.prototype.setUp = function() {
 
 cc.Level.prototype.levelAttempted = function(levelNum) {
   var msg = "";
+  var notFarEnough = "Make sure you send the robot all the way to the next cavern!";
   switch (levelNum) {
     case 1:
       if (this.robotExitedDoor()) {
         return this.levelPassed();
+      } else {
+        msg = notFarEnough;
       }
       break;
     case 2:
       if (this.world.collidersGrabbed() && this.robotExitedDoor()) {
         return this.levelPassed();
+      } else if (!this.world.collidersGrabbed()) {
+        msg = "Jump up and grab the coin on the way!";
+      } else {
+        msg = notFarEnough;
       }
       break;
     case 3:
@@ -100,7 +112,10 @@ cc.Level.prototype.levelAttempted = function(levelNum) {
                 tell the robot to do things multiple times in a row.";
           }
         } else {
+          msg = "Make sure you grab all the coins!";
         }
+      } else {
+        msg = notFarEnough;
       }
     default:
       break;

@@ -26,6 +26,7 @@ goog.inherits(cc.Message, lime.Sprite);
 
 cc.Message.prototype.hide = function() {
   this.setHidden(true);
+  amplify.publish("MessageHidden");
 };
 
 cc.Message.prototype.show = function(text, opt_text) {
