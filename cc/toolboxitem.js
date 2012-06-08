@@ -51,6 +51,7 @@ cc.ToolboxItem = function(name, description) {
         for (var i=0; i<dropTargets.length; i++) {
           drag.addDropTarget(dropTargets[i]);
         }
+        drag.addDropTarget(actionPlan);
         event.stopPropagation();
 
        // Drop into target
