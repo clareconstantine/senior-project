@@ -13,6 +13,7 @@ cc.World = function(levelNum) {
   this.appendChild(label);
 
   this.colliders = [];
+  this.doorX = 800; // By default, robot has to pass right edge to exit. 
 
   this.setAnchorPoint(0,0);
   this.setUpWorld(levelNum);
@@ -30,6 +31,14 @@ cc.World.prototype.reset = function() {
 
 cc.World.prototype.numColliders = function() {
   return this.colliders.length;
+};
+
+cc.World.prototype.collidersGrabbed = function() {
+  var count = 0;
+  for (var i=0; i<this.numColliders(); i++) {
+    if (this.colliders[i].wasGrabbed) count++;
+  }
+  return count;
 };
 
 cc.World.prototype.setUpWorld = function(level) {
@@ -84,6 +93,14 @@ cc.World.prototype.setUpWorld = function(level) {
     brick.setAnchorPoint(0,0).setPosition(0+i*100,1);
     ground.appendChild(brick);
   }
+};
+
+cc.World.prototype.collidersCollected = function() {
+  var count = 0;
+  for (var i=0; i<this.numColliders(); i++) {
+    if (this.colliders[i].wasGrabbed) count++;
+  }
+  return count;
 };
 
 // Append the child at x,y of our world grid

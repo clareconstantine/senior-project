@@ -5,12 +5,12 @@ goog.require('lime.Circle');
 cc.Coin = function() {
   goog.base(this);
   this.setSize(30,30).setFill('#FFC125').setAnchorPoint(0,0);
-  this.coinGrabbed = false;
+  this.wasGrabbed = false;
 };
 goog.inherits(cc.Coin, lime.Circle);
 
 
 cc.Coin.prototype.robotCollided = function() {
   this.setHidden(true);
-  this.coinGrabbed = true;
+  this.wasGrabbed = true;
 };

@@ -93,7 +93,11 @@ cc.Level.prototype.levelAttempted = function(levelNum) {
       }
       break;
     case 3:
-
+      if (this.robotExitedDoor()) {
+        if (this.world.collidersGrabbed() == this.world.numColliders()) {
+          return this.levelPassed();
+        }
+      }
     default:
       break;
   }
