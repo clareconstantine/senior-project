@@ -16,7 +16,7 @@ cc.ActionPlan = function() {
   this.setFill('#000');
 
   this.scroll = new lime.Sprite();
-  this.scroll.setSize(cc.ActionPlan.WIDTH, cc.World.HEIGHT).setAnchorPoint(0,0);
+  this.scroll.setSize(cc.ActionPlan.WIDTH, cc.World.HEIGHT-30).setAnchorPoint(0,0); // height reduced bc of clear button
   this.setAnchorPoint(0,0);
   var el = this.scroll.getDeepestDomElement();
   el.style.overflowY = "scroll";
@@ -31,6 +31,13 @@ cc.ActionPlan = function() {
 
   this.planLabel = new lime.Label("COMMANDS").setFontSize(18).setFontColor('#fff').setPosition(10,10).setAnchorPoint(0,0);
   this.appendChild(this.planLabel);
+
+  this.clearButton = new lime.GlossyButton("CLEAR").setSize(100, 30);
+  this.clearButton.setAnchorPoint(0,0).setColor('#568').setPosition(75, 500);
+  goog.events.listen(this.clearButton, ['click'], function(e) {
+    self.clear();
+  });
+  this.appendChild(this.clearButton);
 
   this.sub = amplify.subscribe("ToolSelected", function( tool ) {
       self.addAction(tool);
