@@ -10,7 +10,8 @@ goog.require('cc.Toolbox');
 goog.require('cc.World');
 
 DIRECTIONS = ["Move the robot through the cavern entrance on the right.",
-              "Collect the coin on your way through the tunnel."];
+              "Collect the coin on your way through the tunnel.",
+              "Collect all the coins on your way through the tunnel."];
 PASSWORDS = ["one", "two", "three", "four"];
 
 cc.Level = function(levelNum, robot, actionPlan) {
@@ -162,18 +163,16 @@ cc.Level.prototype.checkCollisions = function() {
 
 cc.Level.prototype.animateSolution = function(levelNum) {
   var animations = [];
-  var tools = this.toolbox.getTools();
+  var moveTool = new cc.Tool("MOVE");
+  var jumpTool = new cc.Tool("JUMP");
   switch (levelNum) {
     case 1:
-      var moveTool = tools[0];
-      // screen is 8 positions wide, must move robot 7 times to complete level
-      for (var i=0; i<7; i++) {
+      // screen is 8 positions wide, must move robot 8 times (off the screen) to complete level
+      for (var i=0; i<8; i++) {
         animations.push(moveTool.getAnimation());
       }
       break;
     case 2:
-      var moveTool = tools[0];
-      var jumpTool = tools[1];
       for (var i=0; i<4; i++) {
         animations.push(moveTool.getAnimation());
       }
@@ -182,6 +181,13 @@ cc.Level.prototype.animateSolution = function(levelNum) {
         animations.push(moveTool.getAnimation());
       }
       break;
+    case 3:
+      for (var i=0; i<8; i++) {
+        animations.push(moveTool.getAnimation());
+        if (i==0 || i==2 || i==4 || i==6) {
+          animations.push(jumpTool.getAnimation());
+        }
+      }
     default:
   }
   var sequence = new lime.animation.Sequence(animations);
