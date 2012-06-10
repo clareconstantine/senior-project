@@ -173,12 +173,11 @@ cc.Level.prototype.animateSolution = function(levelNum) {
       }
       break;
     case 2:
-      for (var i=0; i<4; i++) {
+      for (var i=0; i<8; i++) {
         animations.push(moveTool.getAnimation());
-      }
-      animations.push(jumpTool.getAnimation());
-      for (var i=0; i<4; i++) {
-        animations.push(moveTool.getAnimation());
+        if (i==3) {
+          animations.push(jumpTool.getAnimation());
+        }
       }
       break;
     case 3:
