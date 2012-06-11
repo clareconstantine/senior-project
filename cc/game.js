@@ -123,7 +123,20 @@ cc.Game.prototype.showLevelTitlePage = function(level) {
   layer.appendChild(pLabel);
   }
 
-  var goButton = new lime.GlossyButton('OK').setSize(50, 30).setPosition(475, 300).setColor('#5A5');
+  switch (level.levelNum) {
+    case 2:
+      var jumpDir = new lime.Label('You learned a new command: JUMP makes the robot jump!').setFontColor(
+        '#ff3').setAnchorPoint(0,0).setPosition(50, 300).setFontSize(27);
+      layer.appendChild(jumpDir);
+      break;
+    case 3:
+      var forDir = new lime.Label('You learned a new command! To make the robot do part of the command list more than once, click TIMES, say how many times to repeat, and then drag the commands you want him to do on top of the TIMES command in the command list!').setAnchorPoint(
+        0,0).setPosition(50, 300).setFontSize(25).setFontColor('#ff6').setSize(800,300);
+        layer.appendChild(forDir);
+    default:
+  }
+
+  var goButton = new lime.GlossyButton('OK').setSize(50, 30).setPosition(475, 450).setColor('#5A5');
   var self = this;
   goog.events.listen(goButton, 'click', function() {
       var levelScene = new lime.Scene();
@@ -158,35 +171,32 @@ cc.Game.prototype.showTutorialPageOne = function() {
 
   var toolbox_label = new lime.Label('Toolbox').setFontColor('#fff').setAnchorPoint(0,0).setFontSize(30).setPosition(50, 430);
   layer.appendChild(toolbox_label);
+  var toolbox_line = this.drawLine(3, 170, 450, 230, 450);
+  layer.appendChild(toolbox_line);
 
-  var commandlist_label = new lime.Label('Command List').setFontColor('#fff').setAnchorPoint(0,0).setFontSize(30).setPosition(725, 175);
+  var commandlist_label = new lime.Label('Command List').setFontColor('#fff').setAnchorPoint(0,0).setFontSize(30).setPosition(725, 170);
   layer.appendChild(commandlist_label);
+  var commandList_line = this.drawLine(3, 685, 185, 720, 185);
+  layer.appendChild(commandList_line);
 
-  // TODO: translate and transform arrow so it points at the correct part
- // var arrow = new lime.Polygon().setPoints(10,0,60,60,50,20,120,20,120,-20,50,-20,60,-60).setPosition(450,200).setFill('#169');
-  //layer.appendChild(arrow);
-
-  // TODO: fill in basic elements of miniWorld, label them
-  var image = new lime.Sprite().setSize(.5*cc.Level.WIDTH, .5*cc.Level.HEIGHT).setAnchorPoint(0,0).setFill('#191');
+  var image = new lime.Sprite().setSize(.5*cc.Level.WIDTH, .5*cc.Level.HEIGHT).setAnchorPoint(0,0).setFill('miniWorld.png');
   image.setPosition(.25*cc.Level.WIDTH, .25*cc.Level.HEIGHT + 25);
+  var miniWorld = new lime.Sprite().setSize
   layer.appendChild(image);
 
   var nextButton = new lime.GlossyButton('Next').setSize(60, 40).setPosition(875, 550).setColor('#5A5');
   goog.events.listen(nextButton, 'click', function(){
-    // TODO: correct nav and pages of tutorial
     self.showTutorialPageTwo();
   });
   layer.appendChild(nextButton);
 
   var backButton = new lime.GlossyButton('Back').setSize(60, 40).setPosition(75, 550).setColor('#5A5');
   goog.events.listen(backButton, 'click', function(){
-    // TODO: correct nav and pages of tutorial
     self.showStartPage();
   });
   layer.appendChild(backButton);
 
   scene.appendChild(layer);
-  // set current scene active
   cc.director.replaceScene(scene);
 
 };
@@ -200,37 +210,31 @@ cc.Game.prototype.showTutorialPageTwo = function() {
   layer.appendChild(background);
 
   var dir1 = new lime.Label('Click RUN to try your program and see the robot follow the commands.');
-  dir1.setFontColor('#fff').setAnchorPoint(0,0).setPosition(50, 40).setFontSize(30).setSize(800,300); // need to set width
+  dir1.setFontColor('#fff').setAnchorPoint(0,0).setPosition(50, 40).setFontSize(30).setSize(800,300); 
   layer.appendChild(dir1);
 
-  var run_label = new lime.Label('Run').setFontColor('#fff').setAnchorPoint(0,0).setFontSize(30).setPosition(825, 450);
+  var run_label = new lime.Label('Run').setFontColor('#fff').setAnchorPoint(0,0).setFontSize(30).setPosition(825, 435);
   layer.appendChild(run_label);
+  var run_line = this.drawLine(3, 815, 450, 705, 450);
+  layer.appendChild(run_line);
 
-  // TODO: translate and transform arrow so it points at the correct part
- // var arrow = new lime.Polygon().setPoints(10,0,60,60,50,20,120,20,120,-20,50,-20,60,-60).setPosition(450,200).setFill('#169');
-  //layer.appendChild(arrow);
-
-  // TODO: fill in basic elements of miniWorld, label them
-  var image = new lime.Sprite().setSize(.5*cc.Level.WIDTH, .5*cc.Level.HEIGHT).setAnchorPoint(0,0).setFill('#191');
+  var image = new lime.Sprite().setSize(.5*cc.Level.WIDTH, .5*cc.Level.HEIGHT).setAnchorPoint(0,0).setFill('miniWorld.png');
   image.setPosition(.25*cc.Level.WIDTH, .25*cc.Level.HEIGHT + 25);
   layer.appendChild(image);
 
   var nextButton = new lime.GlossyButton('Next').setSize(60, 40).setPosition(875, 550).setColor('#5A5');
   goog.events.listen(nextButton, 'click', function(){
-    // TODO: correct nav and pages of tutorial
     self.showTutorialPageThree();
   });
   layer.appendChild(nextButton);
 
   var backButton = new lime.GlossyButton('Back').setSize(60, 40).setPosition(75, 550).setColor('#5A5');
   goog.events.listen(backButton, 'click', function(){
-    // TODO: correct nav and pages of tutorial
     self.showTutorialPageOne();
   });
   layer.appendChild(backButton);
 
   scene.appendChild(layer);
-  // set current scene active
   cc.director.replaceScene(scene);
 
 };
@@ -244,40 +248,36 @@ cc.Game.prototype.showTutorialPageThree = function() {
   layer.appendChild(background);
 
   var dir1 = new lime.Label('Click the \'?\' on a command to see how it works. Click SEE MISSION and the robot will show you what he needs to do. ');
-  dir1.setFontColor('#fff').setAnchorPoint(0,0).setPosition(50, 40).setFontSize(30).setSize(800,300); // need to set width
+  dir1.setFontColor('#fff').setAnchorPoint(0,0).setPosition(50, 40).setFontSize(30).setSize(800,300); 
   layer.appendChild(dir1);
 
-  var Q_label = new lime.Label('?').setFontColor('#fff').setAnchorPoint(0,0).setFontSize(27).setPosition(120, 420);
+  var Q_label = new lime.Label('?').setFontColor('#fff').setAnchorPoint(0,0).setFontSize(27).setPosition(400,500);
   layer.appendChild(Q_label);
+  var Q_line = this.drawLine(3, 330, 470, 390, 510);
+  layer.appendChild(Q_line);
 
-  var seeMission_label = new lime.Label('See Mission').setFontColor('#fff').setAnchorPoint(0,0).setFontSize(30).setPosition(180, 130);
+  var seeMission_label = new lime.Label('See Mission').setFontColor('#fff').setAnchorPoint(0,0).setFontSize(30).setPosition(100, 130);
   layer.appendChild(seeMission_label);
+  var seeMission_line = this.drawLine(3, 275, 150, 305, 165);
+  layer.appendChild(seeMission_line);
 
-  // TODO: translate and transform arrow so it points at the correct part
- // var arrow = new lime.Polygon().setPoints(10,0,60,60,50,20,120,20,120,-20,50,-20,60,-60).setPosition(450,200).setFill('#169');
-  //layer.appendChild(arrow);
-
-  // TODO: fill in basic elements of miniWorld, label them
-  var image = new lime.Sprite().setSize(.5*cc.Level.WIDTH, .5*cc.Level.HEIGHT).setAnchorPoint(0,0).setFill('#191');
+  var image = new lime.Sprite().setSize(.5*cc.Level.WIDTH, .5*cc.Level.HEIGHT).setAnchorPoint(0,0).setFill('miniWorld.png');
   image.setPosition(.25*cc.Level.WIDTH, .25*cc.Level.HEIGHT + 25);
   layer.appendChild(image);
 
   var nextButton = new lime.GlossyButton('Next').setSize(60, 40).setPosition(875, 550).setColor('#5A5');
   goog.events.listen(nextButton, 'click', function(){
-    // TODO: correct nav and pages of tutorial
     self.showTutorialPageFour();
   });
   layer.appendChild(nextButton);
 
   var backButton = new lime.GlossyButton('Back').setSize(60, 40).setPosition(75, 550).setColor('#5A5');
   goog.events.listen(backButton, 'click', function(){
-    // TODO: correct nav and pages of tutorial
     self.showTutorialPageTwo();
   });
   layer.appendChild(backButton);
 
   scene.appendChild(layer);
-  // set current scene active
   cc.director.replaceScene(scene);
 
 };
@@ -291,40 +291,45 @@ cc.Game.prototype.showTutorialPageFour = function() {
   layer.appendChild(background);
 
   var dir1 = new lime.Label('Click the \'X\' to delete a command from the list, and click CLEAR to delete all the commands.');
-  dir1.setFontColor('#fff').setAnchorPoint(0,0).setPosition(50, 40).setFontSize(30).setSize(800,300); // need to set width
+  dir1.setFontColor('#fff').setAnchorPoint(0,0).setPosition(50, 40).setFontSize(30).setSize(800,300); 
   layer.appendChild(dir1);
 
-  var X_label = new lime.Label('X').setFontColor('#fff').setAnchorPoint(0,0).setFontSize(30).setPosition(825, 200);
+  var X_label = new lime.Label('X').setFontColor('#fff').setAnchorPoint(0,0).setFontSize(30).setPosition(825, 205);
   layer.appendChild(X_label);
+  var X_line = this.drawLine(3, 815, 220, 705, 220);
+  layer.appendChild(X_line);
 
-  var clear_label = new lime.Label('Clear').setFontColor('#fff').setAnchorPoint(0,0).setFontSize(30).setPosition(825,400);
+  var clear_label = new lime.Label('Clear').setFontColor('#fff').setAnchorPoint(0,0).setFontSize(30).setPosition(825,410);
   layer.appendChild(clear_label);
+  var clear_line = this.drawLine(3, 815, 425, 705, 425);
+  layer.appendChild(clear_line);
 
-  // TODO: translate and transform arrow so it points at the correct part
- // var arrow = new lime.Polygon().setPoints(10,0,60,60,50,20,120,20,120,-20,50,-20,60,-60).setPosition(450,200).setFill('#169');
-  //layer.appendChild(arrow);
-
-  // TODO: fill in basic elements of miniWorld, label them
-  var image = new lime.Sprite().setSize(.5*cc.Level.WIDTH, .5*cc.Level.HEIGHT).setAnchorPoint(0,0).setFill('#191');
+  var image = new lime.Sprite().setSize(.5*cc.Level.WIDTH, .5*cc.Level.HEIGHT).setAnchorPoint(0,0).setFill('miniWorld.png');
   image.setPosition(.25*cc.Level.WIDTH, .25*cc.Level.HEIGHT + 25);
   layer.appendChild(image);
 
   var nextButton = new lime.GlossyButton('OK!').setSize(60, 40).setPosition(875, 550).setColor('#5A5');
   goog.events.listen(nextButton, 'click', function(){
-    // TODO: correct nav and pages of tutorial
     self.showStartPage();
   });
   layer.appendChild(nextButton);
 
   var backButton = new lime.GlossyButton('Back').setSize(60, 40).setPosition(75, 550).setColor('#5A5');
   goog.events.listen(backButton, 'click', function(){
-    // TODO: correct nav and pages of tutorial
     self.showTutorialPageThree();
   });
   layer.appendChild(backButton);
 
   scene.appendChild(layer);
-  // set current scene active
   cc.director.replaceScene(scene);
 
-}
+};
+
+cc.Game.prototype.drawLine = function line(size, x1, y1, x2, y2){ 
+  var dx = Math.abs(x2-x1); 
+  var dy = Math.abs(y2-y1); 
+  var width = Math.sqrt(dx*dx+dy*dy)+size; 
+  var line = new lime.Sprite().setSize(width, size).setAnchorPoint(size/2/width, .5).setRotation(-Math.atan2(y2-y1, x2-x1)*180/Math.PI);
+  line.setPosition(x1, y1).setFill('#ff3');
+  return line;
+} 
