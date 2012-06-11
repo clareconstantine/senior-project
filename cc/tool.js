@@ -27,6 +27,41 @@ cc.Tool = function(name) {
     default:
       break;
   }
+
+  var self = this;
+
+  //Listen for drag
+  goog.events.listen(self, ['mousedown'], function(event) {
+    var actionPlan = self.getParent().getParent();
+    var originalPos = self.getPosition();
+    event.swallow('mouseup', function(e) {
+      e.event.stopPropagation();
+      return;
+    });
+
+    actionPlan.setChildIndex(self, actionPlan.getNumberOfChildren());
+    var drag = event.startDrag(false, null, self);
+    var dropTargets = actionPlan.dropTargets;
+    for (var i=0; i<dropTargets.length; i++) {
+      drag.addDropTarget(dropTargets[i]);
+    }
+    event.stopPropagation();
+
+   // Drop into target
+    goog.events.listen(drag, lime.events.Drag.Event.DROP, function(e){
+     e.activeDropTarget.addSubTool(self.name);
+     actionPlan.removeAction(self);
+     e.stopPropagation();
+    });
+  
+    goog.events.listen(drag, lime.events.Drag.Event.CANCEL, function(e) {
+      self.setPosition(originalPos);
+      e.stopPropagation();
+    });
+  });
+
+
+
 };
 goog.inherits(cc.Tool, lime.Sprite);
 

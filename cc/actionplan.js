@@ -49,8 +49,23 @@ cc.ActionPlan = function() {
   amplify.subscribe("PositionActions", function() {
     self.positionActions();
   });
+  this.dropTargets = [];
+  amplify.subscribe("AddDropTarget", function(tool) {
+    self.addDropTarget(tool);
+  });
+  amplify.subscribe("RemoveDropTarget", function(tool) {
+    self.removeDropTarget(tool);
+  });
 };
 goog.inherits(cc.ActionPlan, lime.Sprite);
+
+
+cc.ActionPlan.prototype.addDropTarget = function(target) {
+  this.dropTargets.push(target);
+};
+cc.ActionPlan.prototype.removeDropTarget = function(target) {
+  this.dropTargets.splice(this.dropTargets.indexOf(target), 1);
+};
 
 cc.ActionPlan.prototype.addAction = function(toolName) {
   var tool = null;
@@ -90,10 +105,9 @@ cc.ActionPlan.prototype.removeAction = function(tool) {
   this.actions.splice(index,1);
   this.scroll.removeChildAt(index);
   this.positionActions();
-  amplify.publish("RemoveDropTarget", tool);   /// For removing ForTool as a droptarget in toolbox
-};
-cc.ActionPlan.prototype.removeActionAt = function(index) {
-  this.removeAction(this.actions[index]);
+  if (tool instanceof cc.ForTool) {
+    amplify.publish("RemoveDropTarget", tool);   /// For removing ForTool as a droptarget in toolbox
+  }
 };
 
 cc.ActionPlan.prototype.positionActions = function() {
