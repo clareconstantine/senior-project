@@ -21,6 +21,9 @@ cc.Game = function() {
 goog.inherits(cc.Game, lime.Sprite);
 
 cc.Game.prototype.playLevel = function(levelNum) {
+  if (levelNum > 3) {
+    return this.showStartPage();
+  }
   if (!this.actionPlan) {
     this.actionPlan = new cc.ActionPlan().setPosition(800,0);
   }
@@ -103,7 +106,7 @@ cc.Game.prototype.showLevelTitlePage = function(level) {
   layer.appendChild(background);
 
   if (level.levelNum > 1) {
-    layer.appendChild(new lime.Label("SUCCESS!").setFontColor("#fff").setFontSize(30).setPosition(450,40));
+    layer.appendChild(new lime.Label("MISSION COMPLETE!").setFontColor("#fff").setFontSize(30).setPosition(450,40));
   }
   var title = new lime.Label('LEVEL ' + level.levelNum).setFontColor('#fff').setAnchorPoint(0,0).setPosition(
       50, 80).setFontSize(25);
