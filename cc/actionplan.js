@@ -92,6 +92,9 @@ cc.ActionPlan.prototype.removeAction = function(tool) {
   this.positionActions();
   amplify.publish("RemoveDropTarget", tool);   /// For removing ForTool as a droptarget in toolbox
 };
+cc.ActionPlan.prototype.removeActionAt = function(index) {
+  this.removeAction(this.actions[index]);
+};
 
 cc.ActionPlan.prototype.positionActions = function() {
   if (this.actions.length > 0) {
@@ -133,8 +136,9 @@ cc.ActionPlan.prototype.run = function() {
 };
 
 cc.ActionPlan.prototype.clear = function() {
-  this.actions = [];
-  this.scroll.removeAllChildren();
+  for (var i=this.actions.length-1; i>=0; i--) {
+    this.removeAction(this.actions[i]);
+  }
 };
 
 cc.ActionPlan.prototype.usesForTool = function() {
